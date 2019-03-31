@@ -4,7 +4,7 @@ import com.example.notes.MainActivity;
 
 import dagger.Component;
 
-@Component(modules = {MainModule.class, DbModule.class, NetworkModule.class})
+@Component(modules = {MainModule.class, RealmModule.class, NetworkModule.class})
 public interface MainComponent {
     void injectsMainActivity(MainActivity mainActivity);
 }

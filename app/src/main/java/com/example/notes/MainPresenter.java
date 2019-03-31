@@ -7,8 +7,4 @@ public class MainPresenter {
     public MainPresenter(MainModel mainModel) {
         this.mainModel = mainModel;
     }
-
-    public void testTest() {
-        mainModel.test();
-    }
 }

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 28
@@ -21,6 +22,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    configurations {
+        cleanedAnnotations
+        compile.exclude group: 'org.jetbrains' , module:'annotations'
+        compile.exclude group: 'com.intellij', module:'annotations'
+        compile.exclude group: 'org.intellij', module:'annotations'
+    }
 }
 
 dependencies {
@@ -30,6 +38,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    implementation 'org.jetbrains:annotations-java5:15.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
     def dagger_version = "2.21"
     implementation "com.google.dagger:dagger-android:$dagger_version"
@@ -45,4 +55,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
 
     implementation 'com.annimon:stream:1.2.1'
+
+    implementation 'io.realm:realm-gradle-plugin:5.10.0'
 }
