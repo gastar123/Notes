@@ -8,8 +8,8 @@ import io.realm.RealmResults;
 
 public class MainModel {
 
-    NetworkUtils networkUtils;
-    Realm realm;
+    private NetworkUtils networkUtils;
+    private Realm realm;
 
     public MainModel(Realm realm, NetworkUtils networkUtils) {
         this.realm = realm;

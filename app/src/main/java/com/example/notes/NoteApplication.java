@@ -9,16 +9,16 @@ import io.realm.Realm;
 
 public class NoteApplication extends Application {
 
-    private static MainComponent component;
+    private static MainComponent.Builder builder;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        component = DaggerMainComponent.create();
+        builder = DaggerMainComponent.builder().application(this);
         Realm.init(this);
     }
 
-    public static MainComponent getComponent() {
-        return component;
+    public static MainComponent.Builder getBuilder() {
+        return builder;
     }
 }

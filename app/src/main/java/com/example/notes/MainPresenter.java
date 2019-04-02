@@ -2,9 +2,15 @@ package com.example.notes;
 
 public class MainPresenter {
 
-    MainModel mainModel;
+    private MainModel mainModel;
+    private MainActivity view;
 
-    public MainPresenter(MainModel mainModel) {
+    public MainPresenter(MainModel mainModel, MainActivity view) {
         this.mainModel = mainModel;
+        this.view = view;
+    }
+
+    public void reload() {
+        view.apdateView(mainModel.getAllNotes());
     }
 }
