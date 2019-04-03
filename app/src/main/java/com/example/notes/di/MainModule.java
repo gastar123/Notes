@@ -15,16 +15,19 @@ import io.realm.Realm;
 @Module
 public class MainModule {
 
+    @ActivityScope
     @Provides
     MainPresenter provideMainPresenter(MainModel mainModel, MainActivity activity) {
         return new MainPresenter(mainModel, activity);
     }
 
+    @ActivityScope
     @Provides
     MainModel provideMainModel(Realm realm, NetworkUtils networkUtils) {
         return new MainModel(realm, networkUtils);
     }
 
+    @ActivityScope
     @Provides
     NoteAdapter provideNoteAdapter(Context context) {
         return new NoteAdapter(context);
