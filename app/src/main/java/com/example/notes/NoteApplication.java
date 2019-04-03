@@ -1,24 +1,29 @@
 package com.example.notes;
 
-import android.app.Application;
+import com.example.notes.di.DaggerAppComponent;
 
-import com.example.notes.di.DaggerMainComponent;
-import com.example.notes.di.MainComponent;
-
+import dagger.android.AndroidInjector;
+import dagger.android.support.DaggerApplication;
 import io.realm.Realm;
 
-public class NoteApplication extends Application {
+public class NoteApplication extends DaggerApplication {
 
-    private static MainComponent.Builder builder;
-
+//    private static AppComponent.Builder builder;
+//
     @Override
     public void onCreate() {
         super.onCreate();
-        builder = DaggerMainComponent.builder().application(this);
+//        builder = DaggerAppComponent.builder().application(this);
         Realm.init(this);
     }
+//
+//    public static AppComponent.Builder getBuilder() {
+//        return builder;
+//    }
 
-    public static MainComponent.Builder getBuilder() {
-        return builder;
+    @Override
+    protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
+//        return null;
+        return DaggerAppComponent.builder().application(this).build();
     }
 }

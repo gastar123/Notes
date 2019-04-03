@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
+import dagger.android.AndroidInjection;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,9 +22,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NoteApplication.getBuilder().activity(this).build().injectsMainActivity(this);
+//        NoteApplication.getBuilder().activity(this).build().injectsMainActivity(this);
         init();
     }
 

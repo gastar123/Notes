@@ -16,8 +16,8 @@ import io.realm.Realm;
 public class MainModule {
 
     @Provides
-    MainPresenter provideMainPresenter(MainModel mainModel, MainActivity mainActivity) {
-        return new MainPresenter(mainModel, mainActivity);
+    MainPresenter provideMainPresenter(MainModel mainModel) {
+        return new MainPresenter(mainModel, null);
     }
 
     @Provides
