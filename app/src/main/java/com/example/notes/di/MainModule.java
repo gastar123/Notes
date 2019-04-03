@@ -29,7 +29,7 @@ public class MainModule {
 
     @ActivityScope
     @Provides
-    NoteAdapter provideNoteAdapter(Context context) {
-        return new NoteAdapter(context);
+    NoteAdapter provideNoteAdapter(Context context, MainPresenter mainPresenter) {
+        return new NoteAdapter(context, mainPresenter);
     }
 }

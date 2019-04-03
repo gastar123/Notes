@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         rvMain.setAdapter(adapter);
     }
 
-    public void apdateView(List<Note> notesList) {
+    public void updateView(List<Note> notesList) {
         adapter.changeData(notesList);
     }
 }

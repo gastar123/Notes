@@ -11,6 +11,6 @@ public class MainPresenter {
     }
 
     public void reload() {
-        view.apdateView(mainModel.getAllNotes());
+        view.updateView(mainModel.getAllNotes());
     }
 }
