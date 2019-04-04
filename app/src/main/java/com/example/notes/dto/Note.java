@@ -1,13 +1,13 @@
-package com.example.notes;
+package com.example.notes.dto;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Note extends RealmObject {
+public class Note extends RealmObject implements Serializable {
 
     @PrimaryKey
     private Integer id;

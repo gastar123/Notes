@@ -1,5 +1,8 @@
 package com.example.notes;
 
+import com.example.notes.dto.Note;
+import com.example.notes.dto.Tag;
+
 import java.util.Collection;
 import java.util.List;
 

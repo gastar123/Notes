@@ -1,12 +1,12 @@
 package com.example.notes;
 
 import android.content.Context;
-import android.opengl.ETC1;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
+
+import com.example.notes.dto.Note;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +36,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     public NoteAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.note, viewGroup, false);
         final ViewHolder viewHolder = new ViewHolder(view);
+        view.setOnClickListener(v -> {
+            int adapterPosition = viewHolder.getAdapterPosition();
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                mainPresenter.noteEditor(notesList.get(adapterPosition));
+            }
+        });
         return viewHolder;
     }
 
@@ -45,8 +51,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         viewHolder.tvLogin.setText(note.getLogin());
         viewHolder.tvTag.setText(note.getTagsList().get(position).getTag());
         viewHolder.tvDate.setText(note.getDate().toString());
-        viewHolder.etHead.setText(note.getHeadNote());
-        viewHolder.etBody.setText(note.getBodyNote());
+        viewHolder.tvHead.setText(note.getHeadNote());
+        viewHolder.tvBody.setText(note.getBodyNote());
     }
 
     @Override
@@ -56,19 +62,19 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        final TextView tvLogin;
-        final TextView tvTag;
-        final TextView tvDate;
-        final EditText etHead;
-        final EditText etBody;
+        private final TextView tvLogin;
+        private final TextView tvTag;
+        private final TextView tvDate;
+        private final TextView tvHead;
+        private final TextView tvBody;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvLogin = itemView.findViewById(R.id.tvLogin);
             tvTag = itemView.findViewById(R.id.tvTag);
             tvDate = itemView.findViewById(R.id.tvDate);
-            etHead = itemView.findViewById(R.id.etHead);
-            etBody = itemView.findViewById(R.id.etBody);
+            tvHead = itemView.findViewById(R.id.etHead);
+            tvBody = itemView.findViewById(R.id.etBody);
         }
     }
 }

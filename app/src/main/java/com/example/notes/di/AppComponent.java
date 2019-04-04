@@ -15,7 +15,6 @@ import dagger.android.AndroidInjector;
 @Component(modules = {AndroidInjectionModule.class, AppModule.class, ActivityBindingModule.class,
         RealmModule.class, NetworkModule.class})
 public interface AppComponent extends AndroidInjector<NoteApplication> {
-//    void injectsMainActivity(MainActivity mainActivity);
 
     @Component.Builder
     interface Builder {
