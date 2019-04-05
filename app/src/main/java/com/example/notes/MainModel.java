@@ -19,6 +19,10 @@ public class MainModel {
         this.networkUtils = networkUtils;
     }
 
+    public MainModel getMainModel() {
+        return this;
+    }
+
     public List<Note> getAllNotes() {
         final RealmResults<Note> notesList = realm.where(Note.class).findAll();
         return notesList;
@@ -31,6 +35,10 @@ public class MainModel {
         realm.beginTransaction();
         final Note menegedNote = realm.copyToRealmOrUpdate(note);
         realm.commitTransaction();
+    }
+
+    public void insertNotes(List<Note> notes) {
+
     }
 
     public void deleteNote(Collection<Integer> ids) {
@@ -58,6 +66,10 @@ public class MainModel {
         realm.beginTransaction();
         final Tag menegedTag = realm.copyToRealmOrUpdate(tag);
         realm.commitTransaction();
+    }
+
+    public void insertTags(List<Tag> tags) {
+
     }
 
     public void deleteTag(Collection<Integer> ids) {
