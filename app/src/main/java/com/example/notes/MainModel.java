@@ -6,6 +6,7 @@ import com.example.notes.dto.Tag;
 import java.util.Collection;
 import java.util.List;
 
+import io.reactivex.functions.Action;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -17,10 +18,11 @@ public class MainModel {
     public MainModel(Realm realm, NetworkUtils networkUtils) {
         this.realm = realm;
         this.networkUtils = networkUtils;
+        networkUtils.setMainModel(this);
     }
 
-    public MainModel getMainModel() {
-        return this;
+    public void loadFromServer(Action action) {
+        networkUtils.loadNotes(action);
     }
 
     public List<Note> getAllNotes() {
@@ -38,15 +40,15 @@ public class MainModel {
     }
 
     public void insertNotes(List<Note> notes) {
-
+        realm.beginTransaction();
+        realm.insertOrUpdate(notes);
+        realm.commitTransaction();
     }
 
     public void deleteNote(Collection<Integer> ids) {
         realm.beginTransaction();
-
         RealmResults<Note> rows = realm.where(Note.class).in("id", ids.toArray(new Integer[0])).findAll();
         rows.deleteAllFromRealm();
-
         realm.commitTransaction();
     }
 
@@ -69,19 +71,23 @@ public class MainModel {
     }
 
     public void insertTags(List<Tag> tags) {
-
+        realm.beginTransaction();
+        realm.insertOrUpdate(tags);
+        realm.commitTransaction();
     }
 
     public void deleteTag(Collection<Integer> ids) {
         realm.beginTransaction();
-
         RealmResults<Tag> rows = realm.where(Tag.class).in("id", ids.toArray(new Integer[0])).findAll();
         rows.deleteAllFromRealm();
-
         realm.commitTransaction();
     }
 
     private int getNextTagKey() {
         return realm.where(Tag.class).max("id").intValue() + 1;
+    }
+
+    public void closeResources() {
+        realm.close();
     }
 }

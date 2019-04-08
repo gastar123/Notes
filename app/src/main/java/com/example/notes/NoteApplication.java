@@ -8,7 +8,6 @@ import io.realm.Realm;
 
 public class NoteApplication extends DaggerApplication {
 
-
     @Override
     public void onCreate() {
         super.onCreate();

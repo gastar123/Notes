@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        NoteApplication.getBuilder().activity(this).build().injectsMainActivity(this);
         init();
+        mainPresenter.reload();
     }
 
     public void init() {
@@ -48,5 +48,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateView(List<Note> notesList) {
         adapter.changeData(notesList);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mainPresenter.closeResources();
     }
 }

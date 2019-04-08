@@ -10,47 +10,53 @@ import io.realm.annotations.PrimaryKey;
 public class Note extends RealmObject implements Serializable {
 
     @PrimaryKey
+//    @Expose(serialize = false, deserialize = false)
     private Integer id;
-    private String login;
-    private String headNote;
-    private String bodyNote;
+
+//    @SerializedName("id")
+//    private Integer serverId;
+
+    private String user;
+    private String title;
+    private String text;
     private Date date;
-    private RealmList<Tag> tagsList;
+    private RealmList<Tag> tags;
 
     public Note() {
     }
 
-    public Note(String login, String headNote, String bodyNote, Date date, int id, RealmList<Tag> tagsList) {
-        this.login = login;
-        this.headNote = headNote;
-        this.bodyNote = bodyNote;
+    public Note(String user, String title, String text, Date date, Integer id, RealmList<Tag> tags, Integer serverId) {
+        this.user = user;
+        this.title = title;
+        this.text = text;
         this.date = date;
         this.id = id;
-        this.tagsList = tagsList;
+        this.tags = tags;
+//        this.serverId = serverId;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUser() {
+        return user;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public String getHeadNote() {
-        return headNote;
+    public String getTitle() {
+        return title;
     }
 
-    public void setHeadNote(String headNote) {
-        this.headNote = headNote;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getBodyNote() {
-        return bodyNote;
+    public String getText() {
+        return text;
     }
 
-    public void setBodyNote(String bodyNote) {
-        this.bodyNote = bodyNote;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public Date getDate() {
@@ -69,11 +75,21 @@ public class Note extends RealmObject implements Serializable {
         this.id = id;
     }
 
-    public RealmList<Tag> getTagsList() {
-        return tagsList;
+    public RealmList<Tag> getTags() {
+        return tags;
     }
 
-    public void setTagsList(RealmList<Tag> tagsList) {
-        this.tagsList = tagsList;
+    public void setTags(RealmList<Tag> tags) {
+        this.tags = tags;
     }
+
+//    @SerializedName("id")
+//    public Integer getServerId() {
+//        return serverId;
+//    }
+//
+//    @SerializedName("id")
+//    public void setServerId(Integer serverId) {
+//        this.serverId = serverId;
+//    }
 }

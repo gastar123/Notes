@@ -46,10 +46,12 @@ public class NoteActivity extends AppCompatActivity {
 
     public void noteFilling() {
         note = (Note) getIntent().getSerializableExtra("note");
-        tvLogin.setText(note.getLogin());
-        tvTag.setText(TextUtils.join(",", note.getTagsList()));
-        tvDate.setText(note.getDate().toString());
-        etHead.setText(note.getHeadNote());
-        etBody.setText(note.getBodyNote());
+        tvLogin.setText(note.getUser());
+        tvTag.setText(TextUtils.join(",", note.getTags()));
+        if (note.getDate() != null) {
+            tvDate.setText(note.getDate().toString());
+        }
+        etHead.setText(note.getTitle());
+        etBody.setText(note.getText());
     }
 }

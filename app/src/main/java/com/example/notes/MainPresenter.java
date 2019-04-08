@@ -5,6 +5,8 @@ import android.content.Intent;
 import com.example.notes.dto.Note;
 import com.example.notes.editor.NoteActivity;
 
+import io.reactivex.functions.Action;
+
 public class MainPresenter {
 
     private MainModel mainModel;
@@ -17,6 +19,12 @@ public class MainPresenter {
 
     public void reload() {
         view.updateView(mainModel.getAllNotes());
+        mainModel.loadFromServer(new Action() {
+            @Override
+            public void run() throws Exception {
+                view.updateView(mainModel.getAllNotes());
+            }
+        });
     }
 
     public void noteEditor(Note note) {
@@ -27,5 +35,9 @@ public class MainPresenter {
 
     public void noteEditorReturned(Note note) {
         mainModel.editNote(note);
+    }
+
+    public void closeResources() {
+        mainModel.closeResources();
     }
 }

@@ -6,15 +6,21 @@ import io.realm.annotations.PrimaryKey;
 public class Tag extends RealmObject {
 
     @PrimaryKey
+//    @Expose(serialize = false, deserialize = false)
     private Integer id;
-    private String tag;
+
+//    @SerializedName("id")
+//    private Integer serverId;
+
+    private String name;
 
     public Tag() {
     }
 
-    public Tag(String tag, Integer id) {
-        this.tag = tag;
+    public Tag(String name, Integer id, Integer serverId) {
+        this.name = name;
         this.id = id;
+//        this.serverId = serverId;
     }
 
     public Integer getId() {
@@ -25,11 +31,21 @@ public class Tag extends RealmObject {
         this.id = id;
     }
 
-    public String getTag() {
-        return tag;
+    public String getName() {
+        return name;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setName(String name) {
+        this.name = name;
     }
+
+//    @SerializedName("id")
+//    public Integer getServerId() {
+//        return serverId;
+//    }
+//
+//    @SerializedName("id")
+//    public void setServerId(Integer serverId) {
+//        this.serverId = serverId;
+//    }
 }

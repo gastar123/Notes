@@ -1,6 +1,7 @@
 package com.example.notes;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,11 +49,13 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull NoteAdapter.ViewHolder viewHolder, int position) {
         Note note = notesList.get(position);
-        viewHolder.tvLogin.setText(note.getLogin());
-        viewHolder.tvTag.setText(note.getTagsList().get(position).getTag());
-        viewHolder.tvDate.setText(note.getDate().toString());
-        viewHolder.tvHead.setText(note.getHeadNote());
-        viewHolder.tvBody.setText(note.getBodyNote());
+        viewHolder.tvLogin.setText(note.getUser());
+        viewHolder.tvTag.setText(TextUtils.join(",", note.getTags()));
+        if (note.getDate() != null) {
+            viewHolder.tvDate.setText(note.getDate().toString());
+        }
+        viewHolder.tvHead.setText(note.getTitle());
+        viewHolder.tvBody.setText(note.getText());
     }
 
     @Override
