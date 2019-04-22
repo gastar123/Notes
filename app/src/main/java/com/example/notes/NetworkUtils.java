@@ -25,17 +25,7 @@ public class NetworkUtils {
     public void loadTags() {
         serverApi.getTags()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Tag>>() {
-                    @Override
-                    public void accept(List<Tag> tags) throws Exception {
-                        mainModel.insertTags(tags);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        throwable.printStackTrace();
-                    }
-                });
+                .subscribe(mainModel::insertTags, Throwable::printStackTrace);
     }
 
     public void loadNotes(Action action) {
