@@ -19,12 +19,8 @@ public class MainPresenter {
 
     public void reload() {
         view.updateView(mainModel.getAllNotes());
-        mainModel.loadFromServer(new Action() {
-            @Override
-            public void run() throws Exception {
-                view.updateView(mainModel.getAllNotes());
-            }
-        });
+        // Метод run(): колбэк из observer при загрузке с сервера, вызывается когда загрузка завершится
+        mainModel.loadFromServer(() -> view.updateView(mainModel.getAllNotes()));
     }
 
     public void noteEditor(Note note) {

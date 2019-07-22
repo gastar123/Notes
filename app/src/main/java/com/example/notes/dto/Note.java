@@ -1,5 +1,8 @@
 package com.example.notes.dto;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -10,11 +13,11 @@ import io.realm.annotations.PrimaryKey;
 public class Note extends RealmObject implements Serializable {
 
     @PrimaryKey
-//    @Expose(serialize = false, deserialize = false)
-    private Integer id;
+    @Expose(serialize = false, deserialize = false)
+    private Integer realmId;
 
-//    @SerializedName("id")
-//    private Integer serverId;
+    @SerializedName("id")
+    private Integer serverId;
 
     private String user;
     private String title;
@@ -30,9 +33,9 @@ public class Note extends RealmObject implements Serializable {
         this.title = title;
         this.text = text;
         this.date = date;
-        this.id = id;
+        this.realmId = id;
         this.tags = tags;
-//        this.serverId = serverId;
+        this.serverId = serverId;
     }
 
     public String getUser() {
@@ -68,11 +71,11 @@ public class Note extends RealmObject implements Serializable {
     }
 
     public Integer getId() {
-        return id;
+        return realmId;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.realmId = id;
     }
 
     public RealmList<Tag> getTags() {
@@ -83,13 +86,13 @@ public class Note extends RealmObject implements Serializable {
         this.tags = tags;
     }
 
-//    @SerializedName("id")
-//    public Integer getServerId() {
-//        return serverId;
-//    }
-//
-//    @SerializedName("id")
-//    public void setServerId(Integer serverId) {
-//        this.serverId = serverId;
-//    }
+    @SerializedName("id")
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    @SerializedName("id")
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
+    }
 }

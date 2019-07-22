@@ -9,6 +9,7 @@ import java.util.List;
 import io.reactivex.functions.Action;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class MainModel {
 
@@ -26,7 +27,7 @@ public class MainModel {
     }
 
     public List<Note> getAllNotes() {
-        final RealmResults<Note> notesList = realm.where(Note.class).findAll();
+        final List<Note> notesList = realm.copyFromRealm(realm.where(Note.class).findAll().sort("date", Sort.ASCENDING));
         return notesList;
     }
 
@@ -35,7 +36,13 @@ public class MainModel {
             note.setId(getNextNoteKey());
         }
         realm.beginTransaction();
-        final Note menegedNote = realm.copyToRealmOrUpdate(note);
+        realm.copyToRealmOrUpdate(note);
+        realm.commitTransaction();
+    }
+
+    public void insertNote(Note note) {
+        realm.beginTransaction();
+        realm.insertOrUpdate(note);
         realm.commitTransaction();
     }
 
@@ -47,13 +54,17 @@ public class MainModel {
 
     public void deleteNote(Collection<Integer> ids) {
         realm.beginTransaction();
-        RealmResults<Note> rows = realm.where(Note.class).in("id", ids.toArray(new Integer[0])).findAll();
+        RealmResults<Note> rows = realm.where(Note.class).in("realmId", ids.toArray(new Integer[0])).findAll();
         rows.deleteAllFromRealm();
         realm.commitTransaction();
     }
 
-    private int getNextNoteKey() {
-        return realm.where(Note.class).max("id").intValue() + 1;
+    public int getNextNoteKey() {
+        Number realmId = realm.where(Note.class).max("realmId");
+        if (realmId == null) {
+            realmId = 0;
+        }
+        return realmId.intValue() + 1;
     }
 
     public List<Tag> getTags() {
@@ -78,13 +89,13 @@ public class MainModel {
 
     public void deleteTag(Collection<Integer> ids) {
         realm.beginTransaction();
-        RealmResults<Tag> rows = realm.where(Tag.class).in("id", ids.toArray(new Integer[0])).findAll();
+        RealmResults<Tag> rows = realm.where(Tag.class).in("realmId", ids.toArray(new Integer[0])).findAll();
         rows.deleteAllFromRealm();
         realm.commitTransaction();
     }
 
     private int getNextTagKey() {
-        return realm.where(Tag.class).max("id").intValue() + 1;
+        return realm.where(Tag.class).max("realmId").intValue() + 1;
     }
 
     public void closeResources() {
