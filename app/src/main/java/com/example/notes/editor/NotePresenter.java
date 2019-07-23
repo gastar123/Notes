@@ -2,21 +2,41 @@ package com.example.notes.editor;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.text.TextUtils;
 
+import com.example.notes.MainModel;
 import com.example.notes.dto.Note;
+
+import javax.inject.Inject;
 
 public class NotePresenter {
 
+    private MainModel mainModel;
     private NoteActivity noteView;
 
-    public NotePresenter(NoteActivity noteView) {
+    public NotePresenter(MainModel mainModel, NoteActivity noteView) {
+        this.mainModel = mainModel;
         this.noteView = noteView;
     }
 
-    public void returnIntent(Note note) {
-        Intent intent = noteView.getIntent();
-        intent.putExtra("note", note);
-        noteView.setResult(Activity.RESULT_OK, intent);
-        noteView.finish();
+    public Note getNoteFromFirstActivity() {
+        Note note = mainModel.getNoteFromRealm(noteView.getIntent().getExtras().getInt("realmId"));
+        return note;
+
+//        note = (Note) getIntent().getSerializableExtra("note");
+//        tvLogin.setText(note.getUser());
+//        tvTag.setText(TextUtils.join(",", note.getTags()));
+//        if (note.getDate() != null) {
+//            tvDate.setText(note.getDate().toString());
+//        }
+//        etHead.setText(note.getTitle());
+//        etBody.setText(note.getText());
     }
+
+//    public void returnIntent(Note note) {
+//        Intent intent = noteView.getIntent();
+//        intent.putExtra("realmId", note.getId());
+//        noteView.setResult(Activity.RESULT_OK, intent);
+//        noteView.finish();
+//    }
 }

@@ -5,12 +5,12 @@ import android.content.Intent;
 import com.example.notes.dto.Note;
 import com.example.notes.editor.NoteActivity;
 
-import io.reactivex.functions.Action;
-
 public class MainPresenter {
 
     private MainModel mainModel;
     private MainActivity view;
+    private final int CHANGE_NOTE = 1;
+    private final int ADD_NOTE = 1;
 
     public MainPresenter(MainModel mainModel, MainActivity view) {
         this.mainModel = mainModel;
@@ -23,14 +23,21 @@ public class MainPresenter {
         mainModel.loadFromServer(() -> view.updateView(mainModel.getAllNotes()));
     }
 
-    public void noteEditor(Note note) {
+    public void addNote() {
         Intent intent = new Intent(view, NoteActivity.class);
-        intent.putExtra("note", note);
-        view.startActivityForResult(intent, 1);
+        intent.putExtra("requestCode", ADD_NOTE);
+        view.startActivityForResult(intent, ADD_NOTE);
+    }
+
+    public void editNote(Note note) {
+        Intent intent = new Intent(view, NoteActivity.class);
+        intent.putExtra("realmId", note.getId());
+        intent.putExtra("requestCode", CHANGE_NOTE);
+        view.startActivity(intent);
     }
 
     public void noteEditorReturned(Note note) {
-        mainModel.editNote(note);
+        mainModel.editNoteInDB(note);
     }
 
     public void closeResources() {

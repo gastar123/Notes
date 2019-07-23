@@ -40,7 +40,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         view.setOnClickListener(v -> {
             int adapterPosition = viewHolder.getAdapterPosition();
             if (adapterPosition != RecyclerView.NO_POSITION) {
-                mainPresenter.noteEditor(notesList.get(adapterPosition));
+                mainPresenter.editNote(notesList.get(adapterPosition));
             }
         });
         return viewHolder;

@@ -3,7 +3,6 @@ package com.example.notes;
 import android.annotation.SuppressLint;
 
 import com.example.notes.dto.Note;
-import com.example.notes.dto.Tag;
 
 import java.util.List;
 
@@ -39,6 +38,6 @@ public class NetworkUtils {
         serverApi.getNotes()
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap((Function<List<Note>, ObservableSource<Note>>) notes -> Observable.fromArray(notes.toArray(new Note[0])))
-                .subscribe(mainModel::editNote, Throwable::printStackTrace, action::run);
+                .subscribe(note -> mainModel.insertNote(note), Throwable::printStackTrace, action::run);
     }
 }

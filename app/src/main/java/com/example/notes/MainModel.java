@@ -31,7 +31,12 @@ public class MainModel {
         return notesList;
     }
 
-    public void editNote(Note note) {
+    public Note getNoteFromRealm(int id) {
+        Note note = realm.copyFromRealm(realm.where(Note.class).equalTo("realmId", id).findFirst());
+        return note;
+    }
+
+    public void editNoteInDB(Note note) {
         if (note.getId() == null) {
             note.setId(getNextNoteKey());
         }
@@ -41,9 +46,18 @@ public class MainModel {
     }
 
     public void insertNote(Note note) {
-        realm.beginTransaction();
-        realm.insertOrUpdate(note);
-        realm.commitTransaction();
+        Note realmId = realm.where(Note.class).equalTo("serverId", note.getServerId()).findFirst();
+        if (realmId == null) {
+            note.setId(getNextNoteKey());
+            realm.beginTransaction();
+            realm.insertOrUpdate(note);
+            realm.commitTransaction();
+        } else {
+            note.setId(realmId.getId());
+            realm.beginTransaction();
+            realm.insertOrUpdate(note);
+            realm.commitTransaction();
+        }
     }
 
     public void insertNotes(List<Note> notes) {

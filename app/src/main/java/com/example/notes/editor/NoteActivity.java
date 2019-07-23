@@ -2,6 +2,7 @@ package com.example.notes.editor;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import com.example.notes.dto.Note;
 import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatActivity;
+import dagger.android.AndroidInjection;
 
 public class NoteActivity extends AppCompatActivity {
 
@@ -27,6 +29,7 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         init();
@@ -41,11 +44,11 @@ public class NoteActivity extends AppCompatActivity {
         btnAdd = findViewById(R.id.btnAdd);
 
         noteFilling();
-        btnAdd.setOnClickListener(v -> notePresenter.returnIntent(note));
+        btnAdd.setOnClickListener(v -> finish());
     }
 
-    public void noteFilling() {
-        note = (Note) getIntent().getSerializableExtra("note");
+    private void noteFilling() {
+        note = notePresenter.getNoteFromFirstActivity();
         tvLogin.setText(note.getUser());
         tvTag.setText(TextUtils.join(",", note.getTags()));
         if (note.getDate() != null) {

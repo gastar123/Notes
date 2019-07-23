@@ -12,6 +12,7 @@ import io.realm.RealmConfiguration;
 @Module
 public class RealmModule {
 
+
     @Singleton
     @Provides
     Realm provideDatabaseHelper() {
