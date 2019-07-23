@@ -41,8 +41,9 @@ public class MainModel {
             note.setId(getNextNoteKey());
         }
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(note);
+        realm.insertOrUpdate(note);
         realm.commitTransaction();
+        networkUtils.saveToServer(note);
     }
 
     public void insertNote(Note note) {

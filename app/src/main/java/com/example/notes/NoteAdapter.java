@@ -53,7 +53,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         viewHolder.tvTag.setText(TextUtils.join(",", note.getTags()));
         if (note.getDate() != null) {
             viewHolder.tvDate.setText(note.getDate().toString());
-        }
+        } else viewHolder.tvDate.setText("");
         viewHolder.tvHead.setText(note.getTitle());
         viewHolder.tvBody.setText(note.getText());
     }

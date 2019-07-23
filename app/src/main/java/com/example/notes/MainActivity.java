@@ -2,6 +2,8 @@ package com.example.notes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.notes.dto.Note;
 
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        mainPresenter.reload();
+        mainPresenter.reload(true);
     }
 
     public void init() {
@@ -41,14 +43,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (data == null) return;
-//        Note note = mainModel.getNoteFromRealm(data.getExtras().getInt("realmId"));
-//        mainPresenter.noteEditorReturned(note);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 1, 0, "Add note");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        mainPresenter.addNote();
+        return super.onOptionsItemSelected(item);
     }
 
     public void updateView(List<Note> notesList) {
         adapter.changeData(notesList);
+    }
+
+    @Override
+    protected void onResume() {
+        mainPresenter.reload(false);
+        super.onResume();
     }
 
     @Override

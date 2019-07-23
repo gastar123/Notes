@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.example.notes.MainModel;
+import com.example.notes.MainPresenter;
 import com.example.notes.dto.Note;
 
 import javax.inject.Inject;
@@ -22,21 +23,9 @@ public class NotePresenter {
     public Note getNoteFromFirstActivity() {
         Note note = mainModel.getNoteFromRealm(noteView.getIntent().getExtras().getInt("realmId"));
         return note;
-
-//        note = (Note) getIntent().getSerializableExtra("note");
-//        tvLogin.setText(note.getUser());
-//        tvTag.setText(TextUtils.join(",", note.getTags()));
-//        if (note.getDate() != null) {
-//            tvDate.setText(note.getDate().toString());
-//        }
-//        etHead.setText(note.getTitle());
-//        etBody.setText(note.getText());
     }
 
-//    public void returnIntent(Note note) {
-//        Intent intent = noteView.getIntent();
-//        intent.putExtra("realmId", note.getId());
-//        noteView.setResult(Activity.RESULT_OK, intent);
-//        noteView.finish();
-//    }
+    public void insertOrUpdateNote(Note note) {
+        mainModel.editNoteInDB(note);
+    }
 }

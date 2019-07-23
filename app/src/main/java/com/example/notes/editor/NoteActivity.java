@@ -7,22 +7,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.notes.MainPresenter;
 import com.example.notes.R;
 import com.example.notes.dto.Note;
+
+import java.util.Date;
 
 import javax.inject.Inject;
 
 import androidx.appcompat.app.AppCompatActivity;
 import dagger.android.AndroidInjection;
 
-public class NoteActivity extends AppCompatActivity {
+public class NoteActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Inject
     NotePresenter notePresenter;
     private Note note;
-    private TextView tvLogin;
     private TextView tvTag;
-    private TextView tvDate;
     private EditText etHead;
     private EditText etBody;
     private Button btnAdd;
@@ -36,25 +37,49 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     public void init() {
-        tvLogin = findViewById(R.id.tvLogin);
         tvTag = findViewById(R.id.tvTag);
-        tvDate = findViewById(R.id.tvDate);
         etHead = findViewById(R.id.etHead);
         etBody = findViewById(R.id.etBody);
         btnAdd = findViewById(R.id.btnAdd);
 
-        noteFilling();
-        btnAdd.setOnClickListener(v -> finish());
+        checkRequestCode();
+        btnAdd.setOnClickListener(this);
+    }
+
+    public void checkRequestCode() {
+        int requestCode = getIntent().getExtras().getInt("requestCode");
+        if (requestCode == MainPresenter.CHANGE_NOTE) {
+            noteFilling();
+        } else if (requestCode == MainPresenter.ADD_NOTE) {
+            note = new Note();
+        }
     }
 
     private void noteFilling() {
         note = notePresenter.getNoteFromFirstActivity();
-        tvLogin.setText(note.getUser());
         tvTag.setText(TextUtils.join(",", note.getTags()));
-        if (note.getDate() != null) {
-            tvDate.setText(note.getDate().toString());
-        }
         etHead.setText(note.getTitle());
         etBody.setText(note.getText());
+    }
+
+    @Override
+    public void onClick(View v) {
+        boolean error = false;
+        if (etHead.getText().toString().equals("")) {
+            etHead.setError("Empty!");
+            error = true;
+        }
+        if (etBody.getText().toString().equals("")) {
+            etBody.setError("Empty!");
+            error = true;
+        }
+        if (error) {
+            return;
+        }
+        note.setTitle(etHead.getText().toString());
+        note.setText(etBody.getText().toString());
+        note.setDate(new Date());
+        notePresenter.insertOrUpdateNote(note);
+        finish();
     }
 }

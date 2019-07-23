@@ -9,24 +9,26 @@ public class MainPresenter {
 
     private MainModel mainModel;
     private MainActivity view;
-    private final int CHANGE_NOTE = 1;
-    private final int ADD_NOTE = 1;
+    public static final int CHANGE_NOTE = 1;
+    public static final int ADD_NOTE = 2;
 
     public MainPresenter(MainModel mainModel, MainActivity view) {
         this.mainModel = mainModel;
         this.view = view;
     }
 
-    public void reload() {
+    public void reload(boolean load) {
         view.updateView(mainModel.getAllNotes());
-        // Метод run(): колбэк из observer при загрузке с сервера, вызывается когда загрузка завершится
-        mainModel.loadFromServer(() -> view.updateView(mainModel.getAllNotes()));
+        if (load) {
+            // Метод run(): колбэк из observer при загрузке с сервера, вызывается когда загрузка завершится
+            mainModel.loadFromServer(() -> view.updateView(mainModel.getAllNotes()));
+        }
     }
 
     public void addNote() {
         Intent intent = new Intent(view, NoteActivity.class);
         intent.putExtra("requestCode", ADD_NOTE);
-        view.startActivityForResult(intent, ADD_NOTE);
+        view.startActivity(intent);
     }
 
     public void editNote(Note note) {
@@ -34,10 +36,6 @@ public class MainPresenter {
         intent.putExtra("realmId", note.getId());
         intent.putExtra("requestCode", CHANGE_NOTE);
         view.startActivity(intent);
-    }
-
-    public void noteEditorReturned(Note note) {
-        mainModel.editNoteInDB(note);
     }
 
     public void closeResources() {

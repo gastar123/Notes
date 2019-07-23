@@ -1,6 +1,7 @@
 package com.example.notes;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import com.example.notes.dto.Note;
 
@@ -39,5 +40,31 @@ public class NetworkUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap((Function<List<Note>, ObservableSource<Note>>) notes -> Observable.fromArray(notes.toArray(new Note[0])))
                 .subscribe(note -> mainModel.insertNote(note), Throwable::printStackTrace, action::run);
+    }
+
+    public void saveToServer(Note note) {
+        serverApi.addNote(note)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+
+                    }
+                }, throwable -> {
+                    Log.e("My error!!!", throwable.getMessage(), throwable);
+                    throwable.printStackTrace();
+                });
+// new Consumer<Void>() {
+//                    @Override
+//                    public void accept(Void aVoid) throws Exception {
+//
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        Log.e("My error!!!", throwable.getMessage(), throwable);
+//                        throwable.printStackTrace();
+//                    }
+//                });
     }
 }
