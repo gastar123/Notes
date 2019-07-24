@@ -1,16 +1,19 @@
 package com.example.notes.dto;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class Tag extends RealmObject {
 
     @PrimaryKey
-//    @Expose(serialize = false, deserialize = false)
-    private Integer id;
+    @Expose(serialize = false, deserialize = false)
+    private Integer realmId;
 
-//    @SerializedName("id")
-//    private Integer serverId;
+    @SerializedName("id")
+    private Integer serverId;
 
     private String name;
 
@@ -19,16 +22,16 @@ public class Tag extends RealmObject {
 
     public Tag(String name, Integer id, Integer serverId) {
         this.name = name;
-        this.id = id;
-//        this.serverId = serverId;
+        this.realmId = id;
+        this.serverId = serverId;
     }
 
     public Integer getId() {
-        return id;
+        return realmId;
     }
 
     public void setId(Integer id) {
-        this.id = id;
+        this.realmId = id;
     }
 
     public String getName() {
@@ -39,13 +42,13 @@ public class Tag extends RealmObject {
         this.name = name;
     }
 
-//    @SerializedName("id")
-//    public Integer getServerId() {
-//        return serverId;
-//    }
-//
-//    @SerializedName("id")
-//    public void setServerId(Integer serverId) {
-//        this.serverId = serverId;
-//    }
+    @SerializedName("id")
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    @SerializedName("id")
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
+    }
 }

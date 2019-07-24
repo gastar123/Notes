@@ -22,7 +22,7 @@ public class MainModel {
         networkUtils.setMainModel(this);
     }
 
-    public void loadFromServer(Action action) {
+    public void loadNotesFromServer(Action action) {
         networkUtils.loadNotes(action);
     }
 
@@ -82,8 +82,13 @@ public class MainModel {
         return realmId.intValue() + 1;
     }
 
-    public List<Tag> getTags() {
-        final RealmResults<Tag> tagsList = realm.where(Tag.class).findAll();
+
+    public void loadTagsFromServer() {
+        networkUtils.loadTags();
+    }
+
+    public List<Tag> getAllTags() {
+        final List<Tag> tagsList = realm.copyFromRealm(realm.where(Tag.class).findAll());
         return tagsList;
     }
 
@@ -92,14 +97,23 @@ public class MainModel {
             tag.setId(getNextTagKey());
         }
         realm.beginTransaction();
-        final Tag menegedTag = realm.copyToRealmOrUpdate(tag);
+        realm.insertOrUpdate(tag);
         realm.commitTransaction();
     }
 
-    public void insertTags(List<Tag> tags) {
-        realm.beginTransaction();
-        realm.insertOrUpdate(tags);
-        realm.commitTransaction();
+    public void insertTag(Tag tag) {
+        Tag realmId = realm.where(Tag.class).equalTo("serverId", tag.getServerId()).findFirst();
+        if (realmId == null) {
+            tag.setId(getNextNoteKey());
+            realm.beginTransaction();
+            realm.insertOrUpdate(tag);
+            realm.commitTransaction();
+        } else {
+            tag.setId(realmId.getId());
+            realm.beginTransaction();
+            realm.insertOrUpdate(tag);
+            realm.commitTransaction();
+        }
     }
 
     public void deleteTag(Collection<Integer> ids) {
@@ -110,7 +124,11 @@ public class MainModel {
     }
 
     private int getNextTagKey() {
-        return realm.where(Tag.class).max("realmId").intValue() + 1;
+        Number realmId = realm.where(Tag.class).max("realmId");
+        if (realmId == null) {
+            realmId = 0;
+        }
+        return realmId.intValue() + 1;
     }
 
     public void closeResources() {

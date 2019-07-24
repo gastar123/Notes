@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.example.notes.dto.Note;
+import com.example.notes.dto.Tag;
 
 import java.util.List;
 
@@ -31,7 +32,8 @@ public class NetworkUtils {
     public void loadTags() {
         serverApi.getTags()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(tags -> mainModel.insertTags(tags), Throwable::printStackTrace);
+                .flatMap((Function<List<Tag>, ObservableSource<Tag>>) tags -> Observable.fromArray(tags.toArray(new Tag[0])))
+                .subscribe(tag -> mainModel.insertTag(tag), Throwable::printStackTrace);
     }
 
     @SuppressLint("CheckResult")

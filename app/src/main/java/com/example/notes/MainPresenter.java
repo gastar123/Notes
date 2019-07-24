@@ -21,7 +21,7 @@ public class MainPresenter {
         view.updateView(mainModel.getAllNotes());
         if (load) {
             // Метод run(): колбэк из observer при загрузке с сервера, вызывается когда загрузка завершится
-            mainModel.loadFromServer(() -> view.updateView(mainModel.getAllNotes()));
+            mainModel.loadNotesFromServer(() -> view.updateView(mainModel.getAllNotes()));
         }
     }
 
