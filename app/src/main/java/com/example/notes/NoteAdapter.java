@@ -50,9 +50,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull NoteAdapter.ViewHolder viewHolder, int position) {
         Note note = notesList.get(position);
         viewHolder.tvLogin.setText(note.getUser());
-        viewHolder.tvTag.setText(TextUtils.join(",", note.getTags()));
-        if (note.getDate() != null) {
-            viewHolder.tvDate.setText(note.getDate().toString());
+        viewHolder.tvTag.setText(TextUtils.join(", ", note.getTags()));
+        if (note.getCreateDate() != null) {
+            viewHolder.tvDate.setText(note.getCreateDate().toString());
         } else viewHolder.tvDate.setText("");
         viewHolder.tvHead.setText(note.getTitle());
         viewHolder.tvBody.setText(note.getText());

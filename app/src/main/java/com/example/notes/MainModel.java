@@ -27,7 +27,7 @@ public class MainModel {
     }
 
     public List<Note> getAllNotes() {
-        final List<Note> notesList = realm.copyFromRealm(realm.where(Note.class).findAll().sort("date", Sort.ASCENDING));
+        final List<Note> notesList = realm.copyFromRealm(realm.where(Note.class).findAll().sort("createDate", Sort.DESCENDING));
         return notesList;
     }
 
@@ -92,43 +92,28 @@ public class MainModel {
         return tagsList;
     }
 
+    public List<Tag> getTagsByNameIn(String name) {
+        List<Tag> tagsList = realm.copyFromRealm(realm.where(Tag.class).like("name", name.toLowerCase() + "*").findAll());
+        return tagsList;
+    }
+
     public void editTag(Tag tag) {
-        if (tag.getId() == null) {
-            tag.setId(getNextTagKey());
-        }
         realm.beginTransaction();
         realm.insertOrUpdate(tag);
         realm.commitTransaction();
     }
 
     public void insertTag(Tag tag) {
-        Tag realmId = realm.where(Tag.class).equalTo("serverId", tag.getServerId()).findFirst();
-        if (realmId == null) {
-            tag.setId(getNextNoteKey());
-            realm.beginTransaction();
-            realm.insertOrUpdate(tag);
-            realm.commitTransaction();
-        } else {
-            tag.setId(realmId.getId());
-            realm.beginTransaction();
-            realm.insertOrUpdate(tag);
-            realm.commitTransaction();
-        }
+        realm.beginTransaction();
+        realm.insertOrUpdate(tag);
+        realm.commitTransaction();
     }
 
     public void deleteTag(Collection<Integer> ids) {
         realm.beginTransaction();
-        RealmResults<Tag> rows = realm.where(Tag.class).in("realmId", ids.toArray(new Integer[0])).findAll();
+        RealmResults<Tag> rows = realm.where(Tag.class).in("name", ids.toArray(new Integer[0])).findAll();
         rows.deleteAllFromRealm();
         realm.commitTransaction();
-    }
-
-    private int getNextTagKey() {
-        Number realmId = realm.where(Tag.class).max("realmId");
-        if (realmId == null) {
-            realmId = 0;
-        }
-        return realmId.intValue() + 1;
     }
 
     public void closeResources() {

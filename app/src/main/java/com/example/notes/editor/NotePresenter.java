@@ -6,7 +6,11 @@ import android.text.TextUtils;
 
 import com.example.notes.MainModel;
 import com.example.notes.MainPresenter;
+import com.example.notes.TagAutoCompleteAdapter;
 import com.example.notes.dto.Note;
+import com.example.notes.dto.Tag;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -18,6 +22,7 @@ public class NotePresenter {
     public NotePresenter(MainModel mainModel, NoteActivity noteView) {
         this.mainModel = mainModel;
         this.noteView = noteView;
+
     }
 
     public Note getNoteFromFirstActivity() {
@@ -27,5 +32,9 @@ public class NotePresenter {
 
     public void insertOrUpdateNote(Note note) {
         mainModel.editNoteInDB(note);
+    }
+
+    public List<Tag> getTags(String name) {
+        return mainModel.getTagsByNameIn(name);
     }
 }

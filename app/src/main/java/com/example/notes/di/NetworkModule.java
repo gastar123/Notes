@@ -3,6 +3,7 @@ package com.example.notes.di;
 import com.example.notes.MainModel;
 import com.example.notes.NetworkUtils;
 import com.example.notes.ServerApi;
+import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
 
@@ -22,7 +23,8 @@ public class NetworkModule {
     NetworkUtils provideNetworkUtils() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.1.6:8080")
-                .addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build();
 
         ServerApi serverApi = retrofit.create(ServerApi.class);

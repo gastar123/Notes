@@ -22,7 +22,7 @@ public class Note extends RealmObject implements Serializable {
     private String user;
     private String title;
     private String text;
-    private Date date;
+    private Date createDate;
     private RealmList<Tag> tags;
 
     public Note() {
@@ -32,7 +32,7 @@ public class Note extends RealmObject implements Serializable {
         this.user = user;
         this.title = title;
         this.text = text;
-        this.date = date;
+        this.createDate = date;
         this.realmId = id;
         this.tags = tags;
         this.serverId = serverId;
@@ -62,12 +62,12 @@ public class Note extends RealmObject implements Serializable {
         this.text = text;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Integer getId() {
