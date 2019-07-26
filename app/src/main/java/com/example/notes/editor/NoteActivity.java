@@ -37,24 +37,17 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnAdd;
     private MultiAutoCompleteTextView multiAutoCompleteTextView;
 
-//    String[] cities = {"Москва", "Самара", "Вологда", "Волгоград", "Саратов", "Воронеж"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         init();
-
-
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.drop_down_tags, R.id.textView, cities);
-//        multiAutoCompleteTextView.setAdapter(adapter);
-//        multiAutoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
     }
 
     public void init() {
         multiAutoCompleteTextView = findViewById(R.id.multiAutoCompleteTextView);
-        tvTag = findViewById(R.id.tvTag);
+//        tvTag = findViewById(R.id.tvTag);
         etHead = findViewById(R.id.etHead);
         etBody = findViewById(R.id.etBody);
         btnAdd = findViewById(R.id.btnAdd);

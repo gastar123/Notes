@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import dagger.android.AndroidInjection;
 import io.realm.Realm;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     NoteAdapter adapter;
     private RecyclerView rvMain;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
         mainPresenter.reload(true);
+
+        swipeRefreshLayout = findViewById(R.id.pullToRefresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(true);
+            mainPresenter.reload(true);
+        });
     }
 
     public void init() {
@@ -54,8 +62,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateView(List<Note> notesList) {
+    public void updateView(List<Note> notesList, boolean reloadFromServer) {
         adapter.changeData(notesList);
+        if (reloadFromServer) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    public void closeRefreshing() {
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

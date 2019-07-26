@@ -37,11 +37,21 @@ public class NetworkUtils {
     }
 
     @SuppressLint("CheckResult")
-    public void loadNotes(Action action) {
+    public void loadNotes(Action action, Consumer<Throwable> throwableConsumer) {
         serverApi.getNotes()
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap((Function<List<Note>, ObservableSource<Note>>) notes -> Observable.fromArray(notes.toArray(new Note[0])))
-                .subscribe(note -> mainModel.insertNote(note), Throwable::printStackTrace, action::run);
+                .subscribe(note -> mainModel.insertNote(note), new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwableConsumer.accept(throwable);
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        action.run();
+                    }
+                });
     }
 
     public void saveToServer(Note note) {

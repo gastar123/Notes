@@ -2,24 +2,30 @@ package com.example.notes;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.notes.dto.Note;
+import com.example.notes.dto.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import io.realm.RealmList;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     private Context context;
     private MainPresenter mainPresenter;
     private final List<Note> notesList = new ArrayList<>();
+    private LinearLayout.LayoutParams lParams;
+    private int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
 
     public NoteAdapter(Context context, MainPresenter mainPresenter) {
         this.context = context;
@@ -50,7 +56,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull NoteAdapter.ViewHolder viewHolder, int position) {
         Note note = notesList.get(position);
         viewHolder.tvLogin.setText(note.getUser());
-        viewHolder.tvTag.setText(TextUtils.join(", ", note.getTags()));
+        viewHolder.llMain.removeAllViews();
+        if (!note.getTags().isEmpty()) {
+            createLayout(note, viewHolder);
+        }
         if (note.getCreateDate() != null) {
             viewHolder.tvDate.setText(note.getCreateDate().toString());
         } else viewHolder.tvDate.setText("");
@@ -63,21 +72,34 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         return notesList.size();
     }
 
+    private void createLayout(Note note, ViewHolder viewHolder) {
+        RealmList<Tag> tagList = note.getTags();
+        for (Tag tag: tagList) {
+            lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
+            lParams.gravity = Gravity.LEFT;
+            TextView tvTag = new TextView(context);
+            tvTag.setBackgroundResource(R.drawable.bg_text_view);
+            tvTag.setPadding(10, 0, 10, 0);
+            tvTag.setText(tag.getName());
+            viewHolder.llMain.addView(tvTag, lParams);
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView tvLogin;
-        private final TextView tvTag;
         private final TextView tvDate;
         private final TextView tvHead;
         private final TextView tvBody;
+        private LinearLayout llMain;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvLogin = itemView.findViewById(R.id.tvLogin);
-            tvTag = itemView.findViewById(R.id.tvTag);
             tvDate = itemView.findViewById(R.id.tvDate);
             tvHead = itemView.findViewById(R.id.etHead);
             tvBody = itemView.findViewById(R.id.etBody);
+            llMain = itemView.findViewById(R.id.llMain);
         }
     }
 }

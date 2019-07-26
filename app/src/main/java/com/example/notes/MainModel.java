@@ -1,5 +1,7 @@
 package com.example.notes;
 
+import android.widget.Toast;
+
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
 
@@ -7,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -22,8 +25,8 @@ public class MainModel {
         networkUtils.setMainModel(this);
     }
 
-    public void loadNotesFromServer(Action action) {
-        networkUtils.loadNotes(action);
+    public void loadNotesFromServer(Action action, Consumer<Throwable> throwable) {
+        networkUtils.loadNotes(action, throwable);
     }
 
     public List<Note> getAllNotes() {
