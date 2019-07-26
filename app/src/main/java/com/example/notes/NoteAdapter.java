@@ -1,16 +1,14 @@
 package com.example.notes;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
+import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +22,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     private Context context;
     private MainPresenter mainPresenter;
     private final List<Note> notesList = new ArrayList<>();
-    private LinearLayout.LayoutParams lParams;
-    private int wrapContent = LinearLayout.LayoutParams.WRAP_CONTENT;
+    private FlexboxLayout.LayoutParams fParams;
+    private int wrapContent = FlexboxLayout.LayoutParams.WRAP_CONTENT;
 
     public NoteAdapter(Context context, MainPresenter mainPresenter) {
         this.context = context;
@@ -74,14 +72,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     private void createLayout(Note note, ViewHolder viewHolder) {
         RealmList<Tag> tagList = note.getTags();
-        for (Tag tag: tagList) {
-            lParams = new LinearLayout.LayoutParams(wrapContent, wrapContent);
-            lParams.gravity = Gravity.LEFT;
+        for (Tag tag : tagList) {
+            fParams = new FlexboxLayout.LayoutParams(wrapContent, wrapContent);
+            fParams.setMargins(5, 5, 5, 5);
             TextView tvTag = new TextView(context);
             tvTag.setBackgroundResource(R.drawable.bg_text_view);
             tvTag.setPadding(10, 0, 10, 0);
             tvTag.setText(tag.getName());
-            viewHolder.llMain.addView(tvTag, lParams);
+            viewHolder.llMain.addView(tvTag, fParams);
         }
     }
 
@@ -91,7 +89,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         private final TextView tvDate;
         private final TextView tvHead;
         private final TextView tvBody;
-        private LinearLayout llMain;
+        private FlexboxLayout llMain;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
