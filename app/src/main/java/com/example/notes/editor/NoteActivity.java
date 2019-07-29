@@ -99,7 +99,6 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         note.setCreateDate(new Date());
         notePresenter.insertOrUpdateNote(note);
         notePresenter.saveNoteOnServer(note);
-        finish();
     }
 
     public RealmList<Tag> getTagsList(String s) {
