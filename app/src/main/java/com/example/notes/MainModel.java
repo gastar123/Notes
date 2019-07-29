@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class MainModel {
         networkUtils.loadNotes(action, throwable);
     }
 
-    public void saveNoteOnServer(Note note, Consumer<Note> noteConsumer, Consumer<Throwable> throwable) {
+    public void saveNoteOnServer(Note note, Consumer<Long> noteConsumer, Consumer<Throwable> throwable) {
         networkUtils.saveToServer(note, noteConsumer, throwable);
     }
 
@@ -38,7 +39,7 @@ public class MainModel {
         return notesList;
     }
 
-    public Note getNoteFromRealm(int id) {
+    public Note getNoteFromRealm(Long id) {
         Note note = realm.copyFromRealm(realm.where(Note.class).equalTo("realmId", id).findFirst());
         return note;
     }
@@ -53,7 +54,7 @@ public class MainModel {
     }
 
     public void insertNoteInDB(Note note) {
-        Note realmId = realm.copyFromRealm(realm.where(Note.class).equalTo("serverId", note.getServerId()).findFirst());
+        Note realmId = realm.where(Note.class).equalTo("serverId", note.getServerId()).findFirst();
         if (realmId == null) {
             note.setId(getNextNoteKey());
             realm.beginTransaction();
@@ -67,10 +68,10 @@ public class MainModel {
         }
     }
 
-    public void checkNoteFromServer(Note note, Note returnedNote) {
-        returnedNote.setId(note.getId());
+    public void checkNoteFromServer(Note note, Long returnedServerId) {
+        note.setServerId(returnedServerId);
         realm.beginTransaction();
-        realm.insertOrUpdate(returnedNote);
+        realm.insertOrUpdate(note);
         realm.commitTransaction();
     }
 
@@ -80,19 +81,27 @@ public class MainModel {
         realm.commitTransaction();
     }
 
-    public void deleteNote(Collection<Integer> ids) {
+    public void deleteNote(Long serverId) {
+        Note note = realm.where(Note.class).equalTo("serverId", serverId).findFirst();
         realm.beginTransaction();
-        RealmResults<Note> rows = realm.where(Note.class).in("realmId", ids.toArray(new Integer[0])).findAll();
+        note.deleteFromRealm();
+        realm.commitTransaction();
+        networkUtils.deleteNotes(Arrays.asList(serverId));
+    }
+
+    public void deleteNotes(Collection<Long> serverIds) {
+        realm.beginTransaction();
+        RealmResults<Note> rows = realm.where(Note.class).in("realmId", serverIds.toArray(new Long[0])).findAll();
         rows.deleteAllFromRealm();
         realm.commitTransaction();
     }
 
-    public int getNextNoteKey() {
+    public Long getNextNoteKey() {
         Number realmId = realm.where(Note.class).max("realmId");
         if (realmId == null) {
             realmId = 0;
         }
-        return realmId.intValue() + 1;
+        return realmId.longValue() + 1;
     }
 
 

@@ -14,10 +14,10 @@ public class Note extends RealmObject implements Serializable {
 
     @PrimaryKey
     @Expose(serialize = false, deserialize = false)
-    private Integer realmId;
+    private Long realmId;
 
     @SerializedName("id")
-    private Integer serverId;
+    private Long serverId;
 
     private String user;
     private String title;
@@ -28,7 +28,7 @@ public class Note extends RealmObject implements Serializable {
     public Note() {
     }
 
-    public Note(String user, String title, String text, Date date, Integer id, RealmList<Tag> tags, Integer serverId) {
+    public Note(String user, String title, String text, Date date, Long id, RealmList<Tag> tags, Long serverId) {
         this.user = user;
         this.title = title;
         this.text = text;
@@ -70,11 +70,11 @@ public class Note extends RealmObject implements Serializable {
         this.createDate = createDate;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return realmId;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.realmId = id;
     }
 
@@ -87,12 +87,12 @@ public class Note extends RealmObject implements Serializable {
     }
 
     @SerializedName("id")
-    public Integer getServerId() {
+    public Long getServerId() {
         return serverId;
     }
 
     @SerializedName("id")
-    public void setServerId(Integer serverId) {
+    public void setServerId(Long serverId) {
         this.serverId = serverId;
     }
 }

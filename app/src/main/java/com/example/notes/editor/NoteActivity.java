@@ -2,6 +2,8 @@ package com.example.notes.editor;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -114,5 +116,18 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
                 .filter(i -> !i.getName().isEmpty())
                 .collect(Collectors.toCollection(RealmList::new));
         return list;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 1, 0, "Delete note");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        notePresenter.deleteNote(note.getServerId());
+        finish();
+        return super.onOptionsItemSelected(item);
     }
 }

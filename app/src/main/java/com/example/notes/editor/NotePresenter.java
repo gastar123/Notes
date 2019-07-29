@@ -12,6 +12,7 @@ import com.example.notes.TagAutoCompleteAdapter;
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,7 +31,7 @@ public class NotePresenter {
     }
 
     public Note getNoteFromFirstActivity() {
-        Note note = mainModel.getNoteFromRealm(noteView.getIntent().getExtras().getInt("realmId"));
+        Note note = mainModel.getNoteFromRealm(noteView.getIntent().getExtras().getLong("realmId"));
         return note;
     }
 
@@ -39,16 +40,25 @@ public class NotePresenter {
     }
 
     public void saveNoteOnServer(Note note) {
-        mainModel.saveNoteOnServer(note, returnedNote -> checkNoteFromServer(note, returnedNote), this::onError);
+        mainModel.saveNoteOnServer(note, new Consumer<Long>() {
+            @Override
+            public void accept(Long returnedServerId) throws Exception {
+                NotePresenter.this.checkNoteFromServer(note, returnedServerId);
+            }
+        }, this::onError);
     }
 
     public List<Tag> getTags(String name) {
         return mainModel.getTagsByNameIn(name);
     }
 
-    private void checkNoteFromServer(Note note, Note returnedNote) {
-        mainModel.checkNoteFromServer(note, returnedNote);
+    private void checkNoteFromServer(Note note, Long returnedServerId) {
+        mainModel.checkNoteFromServer(note, returnedServerId);
         noteView.finish();
+    }
+
+    public void deleteNote(Long serverId) {
+        mainModel.deleteNote(serverId);
     }
 
     private void onError(Throwable throwable) {
