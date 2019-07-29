@@ -1,7 +1,6 @@
 package com.example.notes;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
@@ -41,7 +40,7 @@ public class NetworkUtils {
         serverApi.getNotes()
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap((Function<List<Note>, ObservableSource<Note>>) notes -> Observable.fromArray(notes.toArray(new Note[0])))
-                .subscribe(note -> mainModel.insertNote(note), new Consumer<Throwable>() {
+                .subscribe(note -> mainModel.insertNoteInDB(note), new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwableConsumer.accept(throwable);
@@ -54,18 +53,15 @@ public class NetworkUtils {
                 });
     }
 
-    public void saveToServer(Note note) {
+    public void saveToServer(Note note, Consumer<Note> noteConsumer, Consumer<Throwable> throwableConsumer) {
         serverApi.addNote(note)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
+                .subscribe(new Consumer<Note>() {
                     @Override
-                    public void run() throws Exception {
-
+                    public void accept(Note returnedNote) throws Exception {
+                        noteConsumer.accept(returnedNote);
                     }
-                }, throwable -> {
-                    Log.e("My error!!!", throwable.getMessage(), throwable);
-                    throwable.printStackTrace();
-                });
+                }, throwableConsumer::accept);
 // new Consumer<Void>() {
 //                    @Override
 //                    public void accept(Void aVoid) throws Exception {

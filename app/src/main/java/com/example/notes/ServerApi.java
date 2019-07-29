@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -23,5 +24,5 @@ public interface ServerApi {
     Completable addTag(@Body Tag tag);
 
     @POST("notes")
-    Completable addNote(@Body Note note);
+    Observable<Note> addNote(@Body Note note);
 }

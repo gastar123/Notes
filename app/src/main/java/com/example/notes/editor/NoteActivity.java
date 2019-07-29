@@ -98,6 +98,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         note.setTags(getTagsList(multiAutoCompleteTextView.getText().toString()));
         note.setCreateDate(new Date());
         notePresenter.insertOrUpdateNote(note);
+        notePresenter.saveNoteOnServer(note);
         finish();
     }
 

@@ -29,6 +29,10 @@ public class MainModel {
         networkUtils.loadNotes(action, throwable);
     }
 
+    public void saveNoteOnServer(Note note, Consumer<Note> noteConsumer, Consumer<Throwable> throwable) {
+        networkUtils.saveToServer(note, noteConsumer, throwable);
+    }
+
     public List<Note> getAllNotes() {
         final List<Note> notesList = realm.copyFromRealm(realm.where(Note.class).findAll().sort("createDate", Sort.DESCENDING));
         return notesList;
@@ -46,11 +50,10 @@ public class MainModel {
         realm.beginTransaction();
         realm.insertOrUpdate(note);
         realm.commitTransaction();
-        networkUtils.saveToServer(note);
     }
 
-    public void insertNote(Note note) {
-        Note realmId = realm.where(Note.class).equalTo("serverId", note.getServerId()).findFirst();
+    public void insertNoteInDB(Note note) {
+        Note realmId = realm.copyFromRealm(realm.where(Note.class).equalTo("serverId", note.getServerId()).findFirst());
         if (realmId == null) {
             note.setId(getNextNoteKey());
             realm.beginTransaction();
@@ -62,6 +65,13 @@ public class MainModel {
             realm.insertOrUpdate(note);
             realm.commitTransaction();
         }
+    }
+
+    public void checkNoteFromServer(Note note, Note returnedNote) {
+        returnedNote.setId(note.getId());
+        realm.beginTransaction();
+        realm.insertOrUpdate(returnedNote);
+        realm.commitTransaction();
     }
 
     public void insertNotes(List<Note> notes) {
