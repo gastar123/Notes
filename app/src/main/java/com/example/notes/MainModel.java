@@ -2,7 +2,10 @@ package com.example.notes;
 
 import android.widget.Toast;
 
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import com.example.notes.dto.Note;
+import com.example.notes.dto.ServerIdForDelete;
 import com.example.notes.dto.Tag;
 
 import java.util.Arrays;
@@ -32,6 +35,24 @@ public class MainModel {
 
     public void saveNoteOnServer(Note note, Consumer<Long> noteConsumer, Consumer<Throwable> throwable) {
         networkUtils.saveToServer(note, noteConsumer, throwable);
+    }
+
+    public void deleteNotesFromServer(Collection<Long> serverIds, Action action, Consumer<Throwable> throwable) {
+        networkUtils.deleteNotes(serverIds, action, throwable);
+    }
+
+    public void insertServerIdForDelete(ServerIdForDelete serverIdForDelete) {
+        realm.beginTransaction();
+        realm.insertOrUpdate(serverIdForDelete);
+        realm.commitTransaction();
+    }
+
+    public Collection<Long> getServerIdsListForDelete() {
+        Collection<ServerIdForDelete> serverIdsObject = realm.copyFromRealm(realm.where(ServerIdForDelete.class).findAll());
+        Collection<Long> serverIds = Stream.of(serverIdsObject)
+                .map(i -> i.getServerId())
+                .collect(Collectors.toList());
+        return serverIds;
     }
 
     public List<Note> getAllNotes() {
@@ -81,12 +102,12 @@ public class MainModel {
         realm.commitTransaction();
     }
 
-    public void deleteNote(Long serverId) {
+    public void deleteNoteFromDB(Long serverId) {
         Note note = realm.where(Note.class).equalTo("serverId", serverId).findFirst();
         realm.beginTransaction();
         note.deleteFromRealm();
         realm.commitTransaction();
-        networkUtils.deleteNotes(Arrays.asList(serverId));
+//        networkUtils.deleteNotes(Arrays.asList(serverId));
     }
 
     public void deleteNotes(Collection<Long> serverIds) {

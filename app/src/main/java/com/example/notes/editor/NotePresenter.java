@@ -1,23 +1,15 @@
 package com.example.notes.editor;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.notes.MainModel;
-import com.example.notes.MainPresenter;
-import com.example.notes.TagAutoCompleteAdapter;
 import com.example.notes.dto.Note;
+import com.example.notes.dto.ServerIdForDelete;
 import com.example.notes.dto.Tag;
 
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
-
-import javax.inject.Inject;
-
-import io.reactivex.functions.Consumer;
 
 public class NotePresenter {
 
@@ -40,12 +32,11 @@ public class NotePresenter {
     }
 
     public void saveNoteOnServer(Note note) {
-        mainModel.saveNoteOnServer(note, new Consumer<Long>() {
-            @Override
-            public void accept(Long returnedServerId) throws Exception {
-                NotePresenter.this.checkNoteFromServer(note, returnedServerId);
-            }
-        }, this::onError);
+        mainModel.saveNoteOnServer(note, returnedServerId -> checkNoteFromServer(note, returnedServerId), this::onError);
+    }
+
+    public void deleteNotesFromServer(Long serverId) {
+        mainModel.deleteNotesFromServer(Arrays.asList(serverId), () -> onComplete(serverId), throwable -> onErrorForDelete(throwable, serverId));
     }
 
     public List<Tag> getTags(String name) {
@@ -57,8 +48,15 @@ public class NotePresenter {
         noteView.finish();
     }
 
-    public void deleteNote(Long serverId) {
-        mainModel.deleteNote(serverId);
+    private void onComplete(Long serverId) {
+        mainModel.deleteNoteFromDB(serverId);
+        noteView.finish();
+    }
+
+    private void onErrorForDelete(Throwable throwable, Long serverId) {
+        mainModel.insertServerIdForDelete(new ServerIdForDelete(serverId));
+        mainModel.deleteNoteFromDB(serverId);
+        onError(throwable);
     }
 
     private void onError(Throwable throwable) {

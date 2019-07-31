@@ -41,12 +41,12 @@ public class NetworkUtils {
         serverApi.getNotes()
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap((Function<List<Note>, ObservableSource<Note>>) notes -> Observable.fromArray(notes.toArray(new Note[0])))
-                .subscribe(new Consumer<Note>() {
+                .subscribe(note -> mainModel.insertNoteInDB(note), throwableConsumer::accept, new Action() {
                     @Override
-                    public void accept(Note note) throws Exception {
-                        mainModel.insertNoteInDB(note);
+                    public void run() throws Exception {
+                        action.run();
                     }
-                }, throwableConsumer::accept, action::run);
+                });
     }
 
     public void saveToServer(Note note, Consumer<Long> noteConsumer, Consumer<Throwable> throwableConsumer) {
@@ -55,9 +55,19 @@ public class NetworkUtils {
                 .subscribe(noteConsumer::accept, throwableConsumer::accept);
     }
 
-    public void deleteNotes(Collection<Long> serverIds) {
+    public void deleteNotes(Collection<Long> serverIds, Action action, Consumer<Throwable> throwableConsumer) {
         serverApi.deleteNote(serverIds)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        action.run();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        throwableConsumer.accept(throwable);
+                    }
+                });
     }
 }

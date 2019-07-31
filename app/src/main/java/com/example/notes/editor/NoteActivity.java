@@ -126,8 +126,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        notePresenter.deleteNote(note.getServerId());
-        finish();
+        notePresenter.deleteNotesFromServer(note.getServerId());
         return super.onOptionsItemSelected(item);
     }
 }
