@@ -24,18 +24,13 @@ public class Note extends RealmObject implements Serializable {
     private String text;
     private Date createDate;
     private RealmList<Tag> tags;
+    private boolean unSaved;
 
     public Note() {
     }
 
-    public Note(String user, String title, String text, Date date, Long id, RealmList<Tag> tags, Long serverId) {
-        this.user = user;
-        this.title = title;
-        this.text = text;
-        this.createDate = date;
-        this.realmId = id;
-        this.tags = tags;
-        this.serverId = serverId;
+    public Note(boolean unSaved) {
+        this.unSaved = unSaved;
     }
 
     public String getUser() {
@@ -84,6 +79,14 @@ public class Note extends RealmObject implements Serializable {
 
     public void setTags(RealmList<Tag> tags) {
         this.tags = tags;
+    }
+
+    public boolean isUnSaved() {
+        return unSaved;
+    }
+
+    public void setUnSaved(boolean unSaved) {
+        this.unSaved = unSaved;
     }
 
     @SerializedName("id")

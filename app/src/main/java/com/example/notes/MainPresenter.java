@@ -7,6 +7,10 @@ import android.widget.Toast;
 import com.example.notes.dto.Note;
 import com.example.notes.editor.NoteActivity;
 
+import java.util.List;
+
+import io.reactivex.functions.Consumer;
+
 public class MainPresenter {
 
     private MainModel mainModel;
@@ -22,7 +26,7 @@ public class MainPresenter {
     public void reload(boolean load) {
         view.updateView(mainModel.getAllNotes(), false);
         if (load) {
-            mainModel.deleteNotesFromServer(mainModel.getServerIdsListForDelete(), this::onComplete, this::onError);
+            mainModel.deleteNotesFromServer(mainModel.getServerIdsListForDelete(), this::onCompleteForDelete, this::onError);
         }
     }
 
@@ -43,7 +47,13 @@ public class MainPresenter {
         mainModel.closeResources();
     }
 
-    private void onComplete() {
+    private void onCompleteForDelete() {
+        List<Note> notesList = mainModel.getNotesForSaveOnServer();
+        mainModel.saveOnServerUnSavedNotes(notesList, returnedServerIds -> onCompleteForSave(notesList, returnedServerIds), this::onError);
+    }
+
+    private void onCompleteForSave(List<Note> notesList, List<Long> returnedServerIds) {
+        mainModel.checkNotesFromServer(notesList, returnedServerIds);
         // Метод run(): колбэк из observer при загрузке с сервера, вызывается когда загрузка завершится
         mainModel.loadNotesFromServer(() -> view.updateView(mainModel.getAllNotes(), true), this::onError);
     }

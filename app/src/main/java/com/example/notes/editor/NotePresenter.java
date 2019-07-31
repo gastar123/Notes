@@ -28,11 +28,12 @@ public class NotePresenter {
     }
 
     public void insertOrUpdateNote(Note note) {
+        note.setUnSaved(true);
         mainModel.editNoteInDB(note);
     }
 
     public void saveNoteOnServer(Note note) {
-        mainModel.saveNoteOnServer(note, returnedServerId -> checkNoteFromServer(note, returnedServerId), this::onError);
+        mainModel.saveNoteOnServer(note, returnedServerId -> checkNoteFromServer(note, returnedServerId), throwable -> onError(throwable));
     }
 
     public void deleteNotesFromServer(Long serverId) {
@@ -44,6 +45,7 @@ public class NotePresenter {
     }
 
     private void checkNoteFromServer(Note note, Long returnedServerId) {
+        note.setUnSaved(false);
         mainModel.checkNoteFromServer(note, returnedServerId);
         noteView.finish();
     }

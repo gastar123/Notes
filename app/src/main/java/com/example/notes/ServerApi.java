@@ -29,6 +29,9 @@ public interface ServerApi {
     @POST("notes")
     Observable<Long> addNote(@Body Note note);
 
+    @POST("notesBatch")
+    Observable<List<Long>> addNotes(@Body List<Note> notesList);
+
 //    Анотация @DELETE запрещает использовать @Body
     @HTTP(method = "DELETE", path = "notes", hasBody = true)
     Completable deleteNote(@Body Collection<Long> serverIds);

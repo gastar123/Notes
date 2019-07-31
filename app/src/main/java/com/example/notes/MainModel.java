@@ -8,6 +8,7 @@ import com.example.notes.dto.Note;
 import com.example.notes.dto.ServerIdForDelete;
 import com.example.notes.dto.Tag;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +36,10 @@ public class MainModel {
 
     public void saveNoteOnServer(Note note, Consumer<Long> noteConsumer, Consumer<Throwable> throwable) {
         networkUtils.saveToServer(note, noteConsumer, throwable);
+    }
+
+    public void saveOnServerUnSavedNotes(List<Note> notesList, Consumer<List<Long>> listConsumer, Consumer<Throwable> throwable) {
+        networkUtils.saveToServerUnSavedNotes(notesList, listConsumer, throwable);
     }
 
     public void deleteNotesFromServer(Collection<Long> serverIds, Action action, Consumer<Throwable> throwable) {
@@ -96,6 +101,22 @@ public class MainModel {
         realm.commitTransaction();
     }
 
+    public List<Note> getNotesForSaveOnServer() {
+        List<Note> notesList = realm.copyFromRealm(realm.where(Note.class).equalTo("unSaved", true).findAll());
+        return notesList;
+    }
+
+    public void checkNotesFromServer(List<Note> notesList, List<Long> returnedServerIds) {
+        List<Note> notesListWithServerId = new ArrayList<>();
+        for (int i = 0; i < notesList.size(); i++) {
+            Note note = notesList.get(i);
+            note.setUnSaved(false);
+            note.setServerId(returnedServerIds.get(i));
+            notesListWithServerId.add(note);
+        }
+        insertNotes(notesListWithServerId);
+    }
+
     public void insertNotes(List<Note> notes) {
         realm.beginTransaction();
         realm.insertOrUpdate(notes);
@@ -107,7 +128,6 @@ public class MainModel {
         realm.beginTransaction();
         note.deleteFromRealm();
         realm.commitTransaction();
-//        networkUtils.deleteNotes(Arrays.asList(serverId));
     }
 
     public void deleteNotes(Collection<Long> serverIds) {
