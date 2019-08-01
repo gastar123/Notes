@@ -28,7 +28,7 @@ public class NotePresenter {
     }
 
     public void insertOrUpdateNote(Note note) {
-        note.setUnSaved(true);
+        note.setUnsaved(true);
         mainModel.editNoteInDB(note);
     }
 
@@ -45,7 +45,7 @@ public class NotePresenter {
     }
 
     private void checkNoteFromServer(Note note, Long returnedServerId) {
-        note.setUnSaved(false);
+        note.setUnsaved(false);
         mainModel.checkNoteFromServer(note, returnedServerId);
         noteView.finish();
     }

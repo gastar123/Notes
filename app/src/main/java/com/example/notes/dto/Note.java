@@ -85,7 +85,7 @@ public class Note extends RealmObject implements Serializable {
         return unSaved;
     }
 
-    public void setUnSaved(boolean unSaved) {
+    public void setUnsaved(boolean unSaved) {
         this.unSaved = unSaved;
     }
 

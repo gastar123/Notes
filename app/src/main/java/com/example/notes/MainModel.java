@@ -1,7 +1,5 @@
 package com.example.notes;
 
-import android.widget.Toast;
-
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.example.notes.dto.Note;
@@ -9,7 +7,6 @@ import com.example.notes.dto.ServerIdForDelete;
 import com.example.notes.dto.Tag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,7 +35,7 @@ public class MainModel {
         networkUtils.saveToServer(note, noteConsumer, throwable);
     }
 
-    public void saveOnServerUnSavedNotes(List<Note> notesList, Consumer<List<Long>> listConsumer, Consumer<Throwable> throwable) {
+    public void saveOnServerUnsavedNotes(List<Note> notesList, Consumer<List<Long>> listConsumer, Consumer<Throwable> throwable) {
         networkUtils.saveToServerUnSavedNotes(notesList, listConsumer, throwable);
     }
 
@@ -110,7 +107,7 @@ public class MainModel {
         List<Note> notesListWithServerId = new ArrayList<>();
         for (int i = 0; i < notesList.size(); i++) {
             Note note = notesList.get(i);
-            note.setUnSaved(false);
+            note.setUnsaved(false);
             note.setServerId(returnedServerIds.get(i));
             notesListWithServerId.add(note);
         }

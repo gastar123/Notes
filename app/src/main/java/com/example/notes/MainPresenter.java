@@ -9,8 +9,6 @@ import com.example.notes.editor.NoteActivity;
 
 import java.util.List;
 
-import io.reactivex.functions.Consumer;
-
 public class MainPresenter {
 
     private MainModel mainModel;
@@ -49,7 +47,7 @@ public class MainPresenter {
 
     private void onCompleteForDelete() {
         List<Note> notesList = mainModel.getNotesForSaveOnServer();
-        mainModel.saveOnServerUnSavedNotes(notesList, returnedServerIds -> onCompleteForSave(notesList, returnedServerIds), this::onError);
+        mainModel.saveOnServerUnsavedNotes(notesList, returnedServerIds -> onCompleteForSave(notesList, returnedServerIds), this::onError);
     }
 
     private void onCompleteForSave(List<Note> notesList, List<Long> returnedServerIds) {
