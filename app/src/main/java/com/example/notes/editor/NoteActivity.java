@@ -31,9 +31,9 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
 
     @Inject
     NotePresenter notePresenter;
+    private int requestCode;
     private TagAutoCompleteAdapter tagAdapter;
     private Note note;
-    private TextView tvTag;
     private EditText etHead;
     private EditText etBody;
     private Button btnAdd;
@@ -49,7 +49,6 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
 
     public void init() {
         multiAutoCompleteTextView = findViewById(R.id.multiAutoCompleteTextView);
-//        tvTag = findViewById(R.id.tvTag);
         etHead = findViewById(R.id.etHead);
         etBody = findViewById(R.id.etBody);
         btnAdd = findViewById(R.id.btnAdd);
@@ -61,8 +60,8 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         btnAdd.setOnClickListener(this);
     }
 
-    public void checkRequestCode() {
-        int requestCode = getIntent().getExtras().getInt("requestCode");
+    private void checkRequestCode() {
+        requestCode = getIntent().getExtras().getInt("requestCode");
         if (requestCode == MainPresenter.CHANGE_NOTE) {
             noteFilling();
         } else if (requestCode == MainPresenter.ADD_NOTE) {
@@ -120,7 +119,9 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, 1, 0, "Delete note");
+        if (requestCode == MainPresenter.CHANGE_NOTE) {
+            menu.add(0, 1, 0, "Delete note");
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
