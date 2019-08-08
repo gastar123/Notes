@@ -1,5 +1,8 @@
 package com.example.notes;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.example.notes.dto.Note;
@@ -20,10 +23,12 @@ public class MainModel {
 
     private NetworkUtils networkUtils;
     private Realm realm;
+    private SharedPreferences sPref;
 
-    public MainModel(Realm realm, NetworkUtils networkUtils) {
+    public MainModel(Realm realm, NetworkUtils networkUtils, SharedPreferences sPref) {
         this.realm = realm;
         this.networkUtils = networkUtils;
+        this.sPref = sPref;
         networkUtils.setMainModel(this);
     }
 
@@ -178,5 +183,16 @@ public class MainModel {
 
     public void closeResources() {
         realm.close();
+    }
+
+    public void saveVersion(Long version) {
+        SharedPreferences.Editor ed = sPref.edit();
+        ed.putLong("version", version);
+        ed.commit();
+    }
+
+    public Long loadVersion() {
+        Long version = sPref.getLong("version", 0);
+        return version;
     }
 }

@@ -14,6 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ServerApi {
 
@@ -21,7 +22,7 @@ public interface ServerApi {
     Observable<List<Tag>> getTags();
 
     @GET("notes")
-    Observable<List<Note>> getNotes();
+    Observable<List<Note>> getNotes(@Query("version") Long version);
 
     @POST("tags")
     Completable addTag(@Body Tag tag);

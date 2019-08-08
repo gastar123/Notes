@@ -2,6 +2,7 @@ package com.example.notes;
 
 import android.annotation.SuppressLint;
 
+import com.annimon.stream.Stream;
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
 
@@ -38,10 +39,15 @@ public class NetworkUtils {
 
     @SuppressLint("CheckResult")
     public void loadNotes(Action action, Consumer<Throwable> throwableConsumer) {
-        serverApi.getNotes()
+        serverApi.getNotes(mainModel.loadVersion())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap((Function<List<Note>, ObservableSource<Note>>) notes -> Observable.fromArray(notes.toArray(new Note[0])))
-                .subscribe(note -> mainModel.insertNoteInDB(note), throwableConsumer::accept, action::run);
+                .subscribe(notesList -> {
+                    for (Note note: notesList) {
+                        mainModel.insertNoteInDB(note);
+                    }
+//                    Преобразую стрим заметок в стрим лонгов(версий), достаю максимальную версию и сохраняю ее(если она есть)
+                    Stream.of(notesList).mapToLong(note -> note.getVersion()).max().executeIfPresent(version -> mainModel.saveVersion(version));
+                }, throwableConsumer::accept, action::run);
     }
 
     public void saveToServer(Note note, Consumer<Long> noteConsumer, Consumer<Throwable> throwableConsumer) {

@@ -129,4 +129,10 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         notePresenter.deleteNotesFromServer(note.getServerId());
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        notePresenter.closeResources();
+    }
 }

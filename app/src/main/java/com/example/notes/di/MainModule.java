@@ -1,6 +1,7 @@
 package com.example.notes.di;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.example.notes.MainActivity;
 import com.example.notes.MainModel;
@@ -23,13 +24,19 @@ public class MainModule {
 
     @ActivityScope
     @Provides
-    MainModel provideMainModel(Realm realm, NetworkUtils networkUtils) {
-        return new MainModel(realm, networkUtils);
+    MainModel provideMainModel(Realm realm, NetworkUtils networkUtils, SharedPreferences sPref) {
+        return new MainModel(realm, networkUtils, sPref);
     }
 
     @ActivityScope
     @Provides
     NoteAdapter provideNoteAdapter(Context context, MainPresenter mainPresenter) {
         return new NoteAdapter(context, mainPresenter);
+    }
+
+    @ActivityScope
+    @Provides
+    SharedPreferences provideSharedPreferences(Context context) {
+        return context.getSharedPreferences("version", Context.MODE_PRIVATE);
     }
 }

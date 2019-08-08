@@ -25,6 +25,7 @@ public class Note extends RealmObject implements Serializable {
     private Date createDate;
     private RealmList<Tag> tags;
     private boolean unSaved;
+    private Long version;
 
     public Note() {
     }
@@ -87,6 +88,14 @@ public class Note extends RealmObject implements Serializable {
 
     public void setUnsaved(boolean unSaved) {
         this.unSaved = unSaved;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     @SerializedName("id")

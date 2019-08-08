@@ -22,7 +22,7 @@ public class NetworkModule {
     @Provides
     NetworkUtils provideNetworkUtils() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.6:8080")
+                .baseUrl("http://45.88.79.176:8080/api/")
                 .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create()))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build();

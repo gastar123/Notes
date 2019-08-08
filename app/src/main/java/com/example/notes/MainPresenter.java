@@ -1,6 +1,8 @@
 package com.example.notes;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -8,6 +10,8 @@ import com.example.notes.dto.Note;
 import com.example.notes.editor.NoteActivity;
 
 import java.util.List;
+
+import io.reactivex.functions.Action;
 
 public class MainPresenter {
 
@@ -53,7 +57,13 @@ public class MainPresenter {
     private void onCompleteForSave(List<Note> notesList, List<Long> returnedServerIds) {
         mainModel.checkNotesFromServer(notesList, returnedServerIds);
         // Метод run(): колбэк из observer при загрузке с сервера, вызывается когда загрузка завершится
-        mainModel.loadNotesFromServer(() -> view.updateView(mainModel.getAllNotes(), true), this::onError);
+        mainModel.loadNotesFromServer(new Action() {
+            @Override
+            public void run() throws Exception {
+                view.updateView(mainModel.getAllNotes(), true);
+
+            }
+        }, this::onError);
     }
 
     private void onError(Throwable throwable) {

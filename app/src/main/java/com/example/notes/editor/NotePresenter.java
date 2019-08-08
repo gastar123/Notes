@@ -66,4 +66,8 @@ public class NotePresenter {
         Toast.makeText(noteView, "Нет соединения с сервером", Toast.LENGTH_SHORT).show();
         noteView.finish();
     }
+
+    public void closeResources() {
+        mainModel.closeResources();
+    }
 }

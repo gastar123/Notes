@@ -1,5 +1,8 @@
 package com.example.notes.di;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.example.notes.MainModel;
 import com.example.notes.NetworkUtils;
 import com.example.notes.editor.NoteActivity;
@@ -20,7 +23,13 @@ public class NoteModule {
 
     @ActivityScope
     @Provides
-    MainModel provideMainModel(Realm realm, NetworkUtils networkUtils) {
-        return new MainModel(realm, networkUtils);
+    MainModel provideMainModel(Realm realm, NetworkUtils networkUtils, SharedPreferences sPref) {
+        return new MainModel(realm, networkUtils, sPref);
+    }
+
+    @ActivityScope
+    @Provides
+    SharedPreferences provideSharedPreferences(Context context) {
+        return context.getSharedPreferences("version", Context.MODE_PRIVATE);
     }
 }
