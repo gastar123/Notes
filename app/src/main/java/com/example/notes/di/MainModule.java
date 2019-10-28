@@ -3,10 +3,11 @@ package com.example.notes.di;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.notes.MainActivity;
-import com.example.notes.MainModel;
-import com.example.notes.MainPresenter;
-import com.example.notes.NetworkUtils;
+import com.example.notes.view.IMainView;
+import com.example.notes.view.MainActivity;
+import com.example.notes.model.MainModel;
+import com.example.notes.presenter.MainPresenter;
+import com.example.notes.model.NetworkUtils;
 import com.example.notes.NoteAdapter;
 
 import dagger.Module;
@@ -18,8 +19,14 @@ public class MainModule {
 
     @ActivityScope
     @Provides
-    MainPresenter provideMainPresenter(MainModel mainModel, MainActivity activity) {
-        return new MainPresenter(mainModel, activity);
+    MainPresenter provideMainPresenter(MainModel mainModel, IMainView view) {
+        return new MainPresenter(mainModel, view);
+    }
+
+    @ActivityScope
+    @Provides
+    IMainView provideMainView(MainActivity view) {
+        return view;
     }
 
     @ActivityScope

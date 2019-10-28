@@ -1,26 +1,23 @@
-package com.example.notes;
+package com.example.notes.presenter;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.notes.dto.Note;
-import com.example.notes.editor.NoteActivity;
+import com.example.notes.model.MainModel;
+import com.example.notes.view.IMainView;
+import com.example.notes.view.NoteActivity;
 
 import java.util.List;
-
-import io.reactivex.functions.Action;
 
 public class MainPresenter {
 
     private MainModel mainModel;
-    private MainActivity view;
+    private IMainView view;
     public static final int CHANGE_NOTE = 1;
     public static final int ADD_NOTE = 2;
 
-    public MainPresenter(MainModel mainModel, MainActivity view) {
+    public MainPresenter(MainModel mainModel, IMainView view) {
         this.mainModel = mainModel;
         this.view = view;
     }
@@ -28,47 +25,44 @@ public class MainPresenter {
     public void reload(boolean load) {
         view.updateView(mainModel.getAllNotes(), false);
         if (load) {
-            mainModel.deleteNotesFromServer(mainModel.getServerIdsListForDelete(), this::onCompleteForDelete, this::onError);
+            mainModel.deleteNotesFromServer(mainModel.getServerIdsListForDelete(), this::onCompleteForDelete,
+                    this::onError);
         }
     }
 
     public void addNote() {
-        Intent intent = new Intent(view, NoteActivity.class);
+        Intent intent = new Intent(view.getContext(), NoteActivity.class);
         intent.putExtra("requestCode", ADD_NOTE);
-        view.startActivity(intent);
+        view.getContext().startActivity(intent);
     }
 
     public void editNote(Note note) {
-        Intent intent = new Intent(view, NoteActivity.class);
+        Intent intent = new Intent(view.getContext(), NoteActivity.class);
         intent.putExtra("realmId", note.getId());
         intent.putExtra("requestCode", CHANGE_NOTE);
-        view.startActivity(intent);
-    }
-
-    public void closeResources() {
-        mainModel.closeResources();
+        view.getContext().startActivity(intent);
     }
 
     private void onCompleteForDelete() {
         List<Note> notesList = mainModel.getNotesForSaveOnServer();
-        mainModel.saveOnServerUnsavedNotes(notesList, returnedServerIds -> onCompleteForSave(notesList, returnedServerIds), this::onError);
+        mainModel.saveOnServerUnsavedNotes(notesList, returnedServerIds -> onCompleteForSave(notesList,
+                returnedServerIds), this::onError);
     }
 
     private void onCompleteForSave(List<Note> notesList, List<Long> returnedServerIds) {
         mainModel.checkNotesFromServer(notesList, returnedServerIds);
         // Метод run(): колбэк из observer при загрузке с сервера, вызывается когда загрузка завершится
-        mainModel.loadNotesFromServer(new Action() {
-            @Override
-            public void run() throws Exception {
-                view.updateView(mainModel.getAllNotes(), true);
-
-            }
-        }, this::onError);
+        mainModel.loadNotesFromServer(() -> view.updateView(mainModel.getAllNotes(), true), this::onError);
     }
 
     private void onError(Throwable throwable) {
         Log.e("My error!!!", throwable.getMessage(), throwable);
-        Toast.makeText(view, "Нет соединения с сервером", Toast.LENGTH_SHORT).show();
+        view.makeToast("Нет соединения с сервером");
         view.closeRefreshing();
+    }
+
+    public void closeResources() {
+        mainModel.closeResources();
+        view = null;
     }
 }

@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
+import com.example.notes.presenter.MainPresenter;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;

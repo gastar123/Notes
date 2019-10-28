@@ -1,5 +1,6 @@
-package com.example.notes.editor;
+package com.example.notes.view;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -8,15 +9,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
-import com.example.notes.MainPresenter;
 import com.example.notes.R;
 import com.example.notes.TagAutoCompleteAdapter;
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
+import com.example.notes.presenter.MainPresenter;
+import com.example.notes.presenter.NotePresenter;
 
 import java.util.Date;
 import java.util.List;
@@ -27,7 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import dagger.android.AndroidInjection;
 import io.realm.RealmList;
 
-public class NoteActivity extends AppCompatActivity implements View.OnClickListener {
+public class NoteActivity extends AppCompatActivity implements INoteView, View.OnClickListener {
 
     @Inject
     NotePresenter notePresenter;
@@ -94,6 +96,7 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
         if (error) {
             return;
         }
+
         note.setTitle(etHead.getText().toString());
         note.setText(etBody.getText().toString());
         note.setTags(getTagsList(multiAutoCompleteTextView.getText().toString()));
@@ -129,6 +132,16 @@ public class NoteActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         notePresenter.deleteNotesFromServer(note.getServerId());
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Activity getActivity() {
+        return this;
+    }
+
+    @Override
+    public void makeToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

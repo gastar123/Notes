@@ -1,26 +1,27 @@
-package com.example.notes;
+package com.example.notes.view;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.notes.NoteAdapter;
+import com.example.notes.R;
 import com.example.notes.dto.Note;
+import com.example.notes.presenter.MainPresenter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import dagger.android.AndroidInjection;
-import io.realm.Realm;
 
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Inject
     MainPresenter mainPresenter;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
     public void updateView(List<Note> notesList, boolean reloadFromServer) {
         adapter.changeData(notesList);
         if (reloadFromServer) {
@@ -69,6 +71,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void makeToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void closeRefreshing() {
         swipeRefreshLayout.setRefreshing(false);
     }

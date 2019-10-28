@@ -1,15 +1,13 @@
 package com.example.notes.di;
 
-import com.example.notes.MainModel;
-import com.example.notes.NetworkUtils;
-import com.example.notes.ServerApi;
+import com.example.notes.model.NetworkUtils;
+import com.example.notes.model.ServerApi;
 import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;

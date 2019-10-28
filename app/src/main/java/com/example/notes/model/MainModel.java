@@ -1,6 +1,5 @@
-package com.example.notes;
+package com.example.notes.model;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.annimon.stream.Collectors;
@@ -16,7 +15,6 @@ import java.util.List;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.realm.Realm;
-import io.realm.RealmResults;
 import io.realm.Sort;
 
 public class MainModel {
@@ -40,7 +38,8 @@ public class MainModel {
         networkUtils.saveToServer(note, noteConsumer, throwable);
     }
 
-    public void saveOnServerUnsavedNotes(List<Note> notesList, Consumer<List<Long>> listConsumer, Consumer<Throwable> throwable) {
+    public void saveOnServerUnsavedNotes(List<Note> notesList, Consumer<List<Long>> listConsumer,
+                                         Consumer<Throwable> throwable) {
         networkUtils.saveToServerUnSavedNotes(notesList, listConsumer, throwable);
     }
 
@@ -55,7 +54,8 @@ public class MainModel {
     }
 
     public Collection<Long> getServerIdsListForDelete() {
-        Collection<ServerIdForDelete> serverIdsObject = realm.copyFromRealm(realm.where(ServerIdForDelete.class).findAll());
+        Collection<ServerIdForDelete> serverIdsObject =
+                realm.copyFromRealm(realm.where(ServerIdForDelete.class).findAll());
         Collection<Long> serverIds = Stream.of(serverIdsObject)
                 .map(i -> i.getServerId())
                 .collect(Collectors.toList());
@@ -63,7 +63,8 @@ public class MainModel {
     }
 
     public List<Note> getAllNotes() {
-        final List<Note> notesList = realm.copyFromRealm(realm.where(Note.class).findAll().sort("createDate", Sort.DESCENDING));
+        final List<Note> notesList = realm.copyFromRealm(realm.where(Note.class).findAll().sort("createDate",
+                Sort.DESCENDING));
         return notesList;
     }
 
@@ -132,13 +133,6 @@ public class MainModel {
         realm.commitTransaction();
     }
 
-    public void deleteNotes(Collection<Long> serverIds) {
-        realm.beginTransaction();
-        RealmResults<Note> rows = realm.where(Note.class).in("realmId", serverIds.toArray(new Long[0])).findAll();
-        rows.deleteAllFromRealm();
-        realm.commitTransaction();
-    }
-
     public Long getNextNoteKey() {
         Number realmId = realm.where(Note.class).max("realmId");
         if (realmId == null) {
@@ -147,37 +141,15 @@ public class MainModel {
         return realmId.longValue() + 1;
     }
 
-
-    public void loadTagsFromServer() {
-        networkUtils.loadTags();
-    }
-
-    public List<Tag> getAllTags() {
-        final List<Tag> tagsList = realm.copyFromRealm(realm.where(Tag.class).findAll());
-        return tagsList;
-    }
-
     public List<Tag> getTagsByNameIn(String name) {
-        List<Tag> tagsList = realm.copyFromRealm(realm.where(Tag.class).like("name", name.toLowerCase() + "*").findAll());
+        List<Tag> tagsList =
+                realm.copyFromRealm(realm.where(Tag.class).like("name", name.toLowerCase() + "*").findAll());
         return tagsList;
-    }
-
-    public void editTag(Tag tag) {
-        realm.beginTransaction();
-        realm.insertOrUpdate(tag);
-        realm.commitTransaction();
     }
 
     public void insertTag(Tag tag) {
         realm.beginTransaction();
         realm.insertOrUpdate(tag);
-        realm.commitTransaction();
-    }
-
-    public void deleteTag(Collection<Integer> ids) {
-        realm.beginTransaction();
-        RealmResults<Tag> rows = realm.where(Tag.class).in("name", ids.toArray(new Integer[0])).findAll();
-        rows.deleteAllFromRealm();
         realm.commitTransaction();
     }
 

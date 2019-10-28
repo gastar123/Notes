@@ -1,7 +1,7 @@
 package com.example.notes.di;
 
-import com.example.notes.MainActivity;
-import com.example.notes.editor.NoteActivity;
+import com.example.notes.view.MainActivity;
+import com.example.notes.view.NoteActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

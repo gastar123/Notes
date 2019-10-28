@@ -1,20 +1,16 @@
-package com.example.notes;
+package com.example.notes.model;
 
 import android.annotation.SuppressLint;
 
 import com.annimon.stream.Stream;
 import com.example.notes.dto.Note;
-import com.example.notes.dto.Tag;
 
 import java.util.Collection;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 public class NetworkUtils {
 
@@ -30,22 +26,15 @@ public class NetworkUtils {
     }
 
     @SuppressLint("CheckResult")
-    public void loadTags() {
-        serverApi.getTags()
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap((Function<List<Tag>, ObservableSource<Tag>>) tags -> Observable.fromArray(tags.toArray(new Tag[0])))
-                .subscribe(tag -> mainModel.insertTag(tag), Throwable::printStackTrace);
-    }
-
-    @SuppressLint("CheckResult")
     public void loadNotes(Action action, Consumer<Throwable> throwableConsumer) {
         serverApi.getNotes(mainModel.loadVersion())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(notesList -> {
-                    for (Note note: notesList) {
+                    for (Note note : notesList) {
                         mainModel.insertNoteInDB(note);
                     }
-//                    Преобразую стрим заметок в стрим лонгов(версий), достаю максимальную версию и сохраняю ее(если она есть)
+//                    Преобразую стрим заметок в стрим лонгов(версий), достаю максимальную версию и сохраняю ее(если
+// она есть)
                     Stream.of(notesList).mapToLong(note -> note.getVersion()).max().executeIfPresent(version -> mainModel.saveVersion(version));
                 }, throwableConsumer::accept, action::run);
     }
@@ -56,7 +45,8 @@ public class NetworkUtils {
                 .subscribe(noteConsumer::accept, throwableConsumer::accept);
     }
 
-    public void saveToServerUnSavedNotes(List<Note> notesList, Consumer<List<Long>> listConsumer, Consumer<Throwable> throwableConsumer) {
+    public void saveToServerUnSavedNotes(List<Note> notesList, Consumer<List<Long>> listConsumer,
+                                         Consumer<Throwable> throwableConsumer) {
         serverApi.addNotes(notesList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(listConsumer::accept, throwableConsumer::accept);

@@ -1,12 +1,12 @@
-package com.example.notes.editor;
+package com.example.notes.presenter;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.notes.MainModel;
 import com.example.notes.dto.Note;
 import com.example.notes.dto.ServerIdForDelete;
 import com.example.notes.dto.Tag;
+import com.example.notes.model.MainModel;
+import com.example.notes.view.INoteView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,16 +14,16 @@ import java.util.List;
 public class NotePresenter {
 
     private MainModel mainModel;
-    private NoteActivity noteView;
+    private INoteView noteView;
 
-    public NotePresenter(MainModel mainModel, NoteActivity noteView) {
+    public NotePresenter(MainModel mainModel, INoteView noteView) {
         this.mainModel = mainModel;
         this.noteView = noteView;
 
     }
 
     public Note getNoteFromFirstActivity() {
-        Note note = mainModel.getNoteFromRealm(noteView.getIntent().getExtras().getLong("realmId"));
+        Note note = mainModel.getNoteFromRealm(noteView.getActivity().getIntent().getExtras().getLong("realmId"));
         return note;
     }
 
@@ -33,11 +33,13 @@ public class NotePresenter {
     }
 
     public void saveNoteOnServer(Note note) {
-        mainModel.saveNoteOnServer(note, returnedServerId -> checkNoteFromServer(note, returnedServerId), throwable -> onError(throwable));
+        mainModel.saveNoteOnServer(note, returnedServerId -> checkNoteFromServer(note, returnedServerId),
+                throwable -> onError(throwable));
     }
 
     public void deleteNotesFromServer(Long serverId) {
-        mainModel.deleteNotesFromServer(Arrays.asList(serverId), () -> onComplete(serverId), throwable -> onErrorForDelete(throwable, serverId));
+        mainModel.deleteNotesFromServer(Arrays.asList(serverId), () -> onComplete(serverId),
+                throwable -> onErrorForDelete(throwable, serverId));
     }
 
     public List<Tag> getTags(String name) {
@@ -47,12 +49,12 @@ public class NotePresenter {
     private void checkNoteFromServer(Note note, Long returnedServerId) {
         note.setUnsaved(false);
         mainModel.checkNoteFromServer(note, returnedServerId);
-        noteView.finish();
+        noteView.getActivity().finish();
     }
 
     private void onComplete(Long serverId) {
         mainModel.deleteNoteFromDB(serverId);
-        noteView.finish();
+        noteView.getActivity().finish();
     }
 
     private void onErrorForDelete(Throwable throwable, Long serverId) {
@@ -63,11 +65,12 @@ public class NotePresenter {
 
     private void onError(Throwable throwable) {
         Log.e("My error!!!", throwable.getMessage(), throwable);
-        Toast.makeText(noteView, "Нет соединения с сервером", Toast.LENGTH_SHORT).show();
-        noteView.finish();
+        noteView.makeToast("Нет соединения с сервером");
+        noteView.getActivity().finish();
     }
 
     public void closeResources() {
         mainModel.closeResources();
+        noteView = null;
     }
 }
