@@ -10,6 +10,8 @@ public interface IMainView {
 
     Context getContext();
 
+    void editNote(Note note);
+
     void updateView(List<Note> notesList, boolean reloadFromServer);
 
     void makeToast(String s);

@@ -1,4 +1,4 @@
-package com.example.notes;
+package com.example.notes.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,19 +8,20 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.annimon.stream.function.Function;
+import com.example.notes.R;
 import com.example.notes.dto.Tag;
-import com.example.notes.view.NoteActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TagAutoCompleteAdapter extends BaseAdapter implements Filterable {
 
-    private NoteActivity noteActivity;
+    private Function<String, List<Tag>> tagsProvider;
     private List<Tag> results = new ArrayList<>();
 
-    public TagAutoCompleteAdapter(NoteActivity noteActivity) {
-        this.noteActivity = noteActivity;
+    public TagAutoCompleteAdapter(Function<String, List<Tag>> tagsProvider) {
+        this.tagsProvider = tagsProvider;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class TagAutoCompleteAdapter extends BaseAdapter implements Filterable {
             @Override
             protected void publishResults(CharSequence constraint, FilterResults filterResults) {
                 if (constraint != null) {
-                    results = noteActivity.getTags(constraint.toString());
+                    results = tagsProvider.apply(constraint.toString());
                 }
 
                 if (results != null && results.size() > 0) {

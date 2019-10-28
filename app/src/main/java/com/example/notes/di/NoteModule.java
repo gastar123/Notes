@@ -3,15 +3,12 @@ package com.example.notes.di;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.notes.TagAutoCompleteAdapter;
-import com.example.notes.dto.Tag;
+import com.example.notes.adapter.TagAutoCompleteAdapter;
 import com.example.notes.model.MainModel;
 import com.example.notes.model.NetworkUtils;
 import com.example.notes.view.INoteView;
 import com.example.notes.view.NoteActivity;
 import com.example.notes.presenter.NotePresenter;
-
-import java.util.List;
 
 import dagger.Module;
 import dagger.Provides;
@@ -36,6 +33,12 @@ public class NoteModule {
     @Provides
     MainModel provideMainModel(Realm realm, NetworkUtils networkUtils, SharedPreferences sPref) {
         return new MainModel(realm, networkUtils, sPref);
+    }
+
+    @ActivityScope
+    @Provides
+    TagAutoCompleteAdapter provideTagAdapter(NotePresenter notePresenter) {
+        return new TagAutoCompleteAdapter(name -> notePresenter.getTags(name));
     }
 
     @ActivityScope

@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.notes.NoteAdapter;
+import com.example.notes.adapter.RecyclerNoteAdapter;
 import com.example.notes.R;
 import com.example.notes.dto.Note;
 import com.example.notes.presenter.MainPresenter;
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Inject
     MainPresenter mainPresenter;
     @Inject
-    NoteAdapter adapter;
+    RecyclerNoteAdapter adapter;
     private RecyclerView rvMain;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -74,6 +74,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    public void editNote(Note note) {
+        mainPresenter.editNote(note);
     }
 
     @Override

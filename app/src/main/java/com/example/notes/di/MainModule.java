@@ -3,12 +3,12 @@ package com.example.notes.di;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.notes.adapter.RecyclerNoteAdapter;
 import com.example.notes.view.IMainView;
 import com.example.notes.view.MainActivity;
 import com.example.notes.model.MainModel;
 import com.example.notes.presenter.MainPresenter;
 import com.example.notes.model.NetworkUtils;
-import com.example.notes.NoteAdapter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -37,8 +37,8 @@ public class MainModule {
 
     @ActivityScope
     @Provides
-    NoteAdapter provideNoteAdapter(Context context, MainPresenter mainPresenter) {
-        return new NoteAdapter(context, mainPresenter);
+    RecyclerNoteAdapter provideNoteAdapter(IMainView view) {
+        return new RecyclerNoteAdapter(note -> view.editNote(note));
     }
 
     @ActivityScope

@@ -147,12 +147,6 @@ public class MainModel {
         return tagsList;
     }
 
-    public void insertTag(Tag tag) {
-        realm.beginTransaction();
-        realm.insertOrUpdate(tag);
-        realm.commitTransaction();
-    }
-
     public void closeResources() {
         realm.close();
     }

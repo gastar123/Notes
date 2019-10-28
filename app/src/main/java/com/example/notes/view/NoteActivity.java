@@ -14,14 +14,13 @@ import android.widget.Toast;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 import com.example.notes.R;
-import com.example.notes.TagAutoCompleteAdapter;
+import com.example.notes.adapter.TagAutoCompleteAdapter;
 import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
 import com.example.notes.presenter.MainPresenter;
 import com.example.notes.presenter.NotePresenter;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -33,8 +32,9 @@ public class NoteActivity extends AppCompatActivity implements INoteView, View.O
 
     @Inject
     NotePresenter notePresenter;
+    @Inject
+    TagAutoCompleteAdapter tagAdapter;
     private int requestCode;
-    private TagAutoCompleteAdapter tagAdapter;
     private Note note;
     private EditText etHead;
     private EditText etBody;
@@ -56,7 +56,6 @@ public class NoteActivity extends AppCompatActivity implements INoteView, View.O
         btnAdd = findViewById(R.id.btnAdd);
 
         checkRequestCode();
-        tagAdapter = new TagAutoCompleteAdapter(this);
         multiAutoCompleteTextView.setAdapter(tagAdapter);
         multiAutoCompleteTextView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         btnAdd.setOnClickListener(this);
@@ -76,10 +75,6 @@ public class NoteActivity extends AppCompatActivity implements INoteView, View.O
         multiAutoCompleteTextView.setText(TextUtils.join(", ", note.getTags()));
         etHead.setText(note.getTitle());
         etBody.setText(note.getText());
-    }
-
-    public List<Tag> getTags(String name) {
-        return notePresenter.getTags(name);
     }
 
     @Override
