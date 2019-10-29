@@ -10,6 +10,7 @@ import com.example.notes.adapter.RecyclerNoteAdapter;
 import com.example.notes.R;
 import com.example.notes.dto.Note;
 import com.example.notes.presenter.MainPresenter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     RecyclerNoteAdapter adapter;
     private RecyclerView rvMain;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +49,10 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     public void init() {
         rvMain = findViewById(R.id.rvMain);
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> mainPresenter.addNote());
         rvMain.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         rvMain.setAdapter(adapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, 1, 0, "Add note");
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        mainPresenter.addNote();
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

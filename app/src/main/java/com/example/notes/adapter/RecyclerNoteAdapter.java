@@ -10,6 +10,8 @@ import com.example.notes.dto.Note;
 import com.example.notes.dto.Tag;
 import com.google.android.flexbox.FlexboxLayout;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class RecyclerNoteAdapter extends RecyclerView.Adapter<RecyclerNoteAdapte
     private final List<Note> notesList = new ArrayList<>();
     private FlexboxLayout.LayoutParams fParams;
     private int wrapContent = FlexboxLayout.LayoutParams.WRAP_CONTENT;
+    private DateFormat df = new SimpleDateFormat("d MMM HH:mm");
 
     public RecyclerNoteAdapter(OnItemClickListener clickListener) {
         this.clickListener = clickListener;
@@ -79,7 +82,8 @@ public class RecyclerNoteAdapter extends RecyclerView.Adapter<RecyclerNoteAdapte
                 createLayout(note);
             }
             if (note.getCreateDate() != null) {
-                tvDate.setText(note.getCreateDate().toString());
+                String localizedDate = df.format(note.getCreateDate());
+                tvDate.setText(localizedDate);
             } else tvDate.setText("");
             tvHead.setText(note.getTitle());
             tvBody.setText(note.getText());
