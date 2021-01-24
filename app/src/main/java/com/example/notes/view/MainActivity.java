@@ -1,6 +1,7 @@
 package com.example.notes.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSupportActionBar(findViewById(R.id.bottom_app_bar));
         init();
         mainPresenter.reload(true);
 
@@ -81,6 +83,19 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public void closeRefreshing() {
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 1, 0, "Log in");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

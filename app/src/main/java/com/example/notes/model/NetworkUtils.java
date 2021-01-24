@@ -57,4 +57,11 @@ public class NetworkUtils {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action::run, throwableConsumer::accept);
     }
+
+    public void sendUserToServer(String userName, String password, Consumer<String> consumer, Consumer<Throwable> throwableConsumer) {
+        serverApi.postUserToServer(userName, password)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(consumer::accept, throwableConsumer::accept);
+
+    }
 }

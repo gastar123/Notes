@@ -53,6 +53,10 @@ public class MainModel {
         realm.commitTransaction();
     }
 
+    public void sendUserToServer(String userName, String password, Consumer<String> consumer, Consumer<Throwable> throwable) {
+        networkUtils.sendUserToServer(userName, password, consumer, throwable);
+    }
+
     public Collection<Long> getServerIdsListForDelete() {
         Collection<ServerIdForDelete> serverIdsObject =
                 realm.copyFromRealm(realm.where(ServerIdForDelete.class).findAll());

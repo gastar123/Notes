@@ -1,5 +1,6 @@
 package com.example.notes.di;
 
+import com.example.notes.view.LoginActivity;
 import com.example.notes.view.MainActivity;
 import com.example.notes.view.NoteActivity;
 
@@ -16,4 +17,8 @@ public abstract class ActivityBindingModule {
     @ActivityScope
     @ContributesAndroidInjector(modules = NoteModule.class)
     abstract NoteActivity noteActivityBinder();
+
+    @ActivityScope
+    @ContributesAndroidInjector(modules = LoginModule.class)
+    abstract LoginActivity loginActivityBinder();
 }
