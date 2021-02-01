@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.notes.R;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     private SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fab;
     private Menu menu;
+    private TextView tvLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     public void init() {
         rvMain = findViewById(R.id.rvMain);
         fab = findViewById(R.id.fab);
+        tvLogin = findViewById(R.id.tv_user_login);
         fab.setOnClickListener(v -> mainPresenter.addNote());
         rvMain.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         rvMain.setAdapter(adapter);
@@ -130,15 +133,17 @@ public class MainActivity extends AppCompatActivity implements IMainView {
             return;
         }
         if (mainPresenter.isLoggedIn()) {
-//            menu.findItem(1).setVisible(false);
-//            menu.findItem(2).setVisible(true);
-            menu.findItem(1).setTitle("--");
-            menu.findItem(2).setTitle("logout");
+            menu.findItem(1).setVisible(false);
+            menu.findItem(2).setVisible(true);
+//            menu.findItem(1).setTitle("--");
+//            menu.findItem(2).setTitle("logout");
+            tvLogin.setText(mainPresenter.getLogin());
         } else {
-//            menu.findItem(1).setVisible(true);
-//            menu.findItem(2).setVisible(false);
-            menu.findItem(1).setTitle("login");
-            menu.findItem(2).setTitle("--");
+            menu.findItem(1).setVisible(true);
+            menu.findItem(2).setVisible(false);
+//            menu.findItem(1).setTitle("login");
+//            menu.findItem(2).setTitle("--");
+            tvLogin.setText("Not logged in");
         }
     }
 }

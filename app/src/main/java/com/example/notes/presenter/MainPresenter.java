@@ -87,4 +87,8 @@ public class MainPresenter {
     public boolean isLoggedIn() {
         return !TextUtils.isEmpty(userInfoProvider.getLogin());
     }
+
+    public String getLogin() {
+        return userInfoProvider.getLogin();
+    }
 }
