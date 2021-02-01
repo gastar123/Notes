@@ -2,10 +2,9 @@ package com.example.notes.view;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.notes.R;
 import com.example.notes.presenter.LoginPresenter;
@@ -37,6 +36,11 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         btnLogIn = findViewById(R.id.btnLogIn);
 
         btnLogIn.setOnClickListener(v -> loginPresenter.sendUserToServer(etUsername.getText().toString(), etPassword.getText().toString()));
+    }
+
+    @Override
+    public void makeToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
     @Override

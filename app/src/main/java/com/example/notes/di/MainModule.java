@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.notes.adapter.RecyclerNoteAdapter;
+import com.example.notes.model.MainModel;
+import com.example.notes.model.NetworkUtils;
+import com.example.notes.model.UserInfoProvider;
+import com.example.notes.presenter.MainPresenter;
 import com.example.notes.view.IMainView;
 import com.example.notes.view.MainActivity;
-import com.example.notes.model.MainModel;
-import com.example.notes.presenter.MainPresenter;
-import com.example.notes.model.NetworkUtils;
 
 import dagger.Module;
 import dagger.Provides;
@@ -19,8 +20,8 @@ public class MainModule {
 
     @ActivityScope
     @Provides
-    MainPresenter provideMainPresenter(MainModel mainModel, IMainView view) {
-        return new MainPresenter(mainModel, view);
+    MainPresenter provideMainPresenter(MainModel mainModel, IMainView view, UserInfoProvider userInfoProvider) {
+        return new MainPresenter(mainModel, view, userInfoProvider);
     }
 
     @ActivityScope

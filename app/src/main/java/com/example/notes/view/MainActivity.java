@@ -7,8 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.notes.adapter.RecyclerNoteAdapter;
 import com.example.notes.R;
+import com.example.notes.adapter.RecyclerNoteAdapter;
 import com.example.notes.dto.Note;
 import com.example.notes.presenter.MainPresenter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     private RecyclerView rvMain;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fab;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,20 +88,33 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         menu.add(0, 1, 0, "Log in");
+        menu.add(0, 2, 1, "Log out");
+        changeLoginMenuItems();
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        switch (item.getItemId()) {
+            case 1:
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                break;
+            case 2:
+                mainPresenter.logout();
+                break;
+            default:
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onResume() {
         mainPresenter.reload(false);
+        changeLoginMenuItems();
         super.onResume();
     }
 
@@ -108,5 +122,23 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     protected void onDestroy() {
         super.onDestroy();
         mainPresenter.closeResources();
+    }
+
+    @Override
+    public void changeLoginMenuItems() {
+        if (menu == null || !menu.hasVisibleItems()) {
+            return;
+        }
+        if (mainPresenter.isLoggedIn()) {
+//            menu.findItem(1).setVisible(false);
+//            menu.findItem(2).setVisible(true);
+            menu.findItem(1).setTitle("--");
+            menu.findItem(2).setTitle("logout");
+        } else {
+//            menu.findItem(1).setVisible(true);
+//            menu.findItem(2).setVisible(false);
+            menu.findItem(1).setTitle("login");
+            menu.findItem(2).setTitle("--");
+        }
     }
 }

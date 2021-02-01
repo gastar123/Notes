@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.example.notes.model.MainModel;
 import com.example.notes.model.NetworkUtils;
+import com.example.notes.model.UserInfoProvider;
 import com.example.notes.presenter.LoginPresenter;
 import com.example.notes.view.ILoginView;
 import com.example.notes.view.LoginActivity;
@@ -24,8 +25,8 @@ public class LoginModule {
 
     @ActivityScope
     @Provides
-    LoginPresenter provideLoginPresenter(MainModel mainModel, ILoginView view) {
-        return new LoginPresenter(mainModel, view);
+    LoginPresenter provideLoginPresenter(MainModel mainModel, ILoginView view, UserInfoProvider userInfoProvider) {
+        return new LoginPresenter(mainModel, view, userInfoProvider);
     }
 
     @ActivityScope

@@ -29,6 +29,10 @@ android {
         compile.exclude group: 'com.intellij', module: 'annotations'
         compile.exclude group: 'org.intellij', module: 'annotations'
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.notes.model.NetworkUtils;
 import com.example.notes.model.ServerApi;
+import com.example.notes.model.UserInfoProvider;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
@@ -22,6 +23,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class NetworkModule {
+
+    @Singleton
+    @Provides
+    UserInfoProvider provideUserInfoProvider(Context ctx) {
+        return new UserInfoProvider(ctx);
+    }
 
     @Singleton
     @Provides

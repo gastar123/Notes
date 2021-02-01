@@ -1,10 +1,12 @@
 package com.example.notes.presenter;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.example.notes.dto.Note;
 import com.example.notes.model.MainModel;
+import com.example.notes.model.UserInfoProvider;
 import com.example.notes.view.IMainView;
 import com.example.notes.view.NoteActivity;
 
@@ -14,12 +16,14 @@ public class MainPresenter {
 
     private MainModel mainModel;
     private IMainView view;
+    private UserInfoProvider userInfoProvider;
     public static final int CHANGE_NOTE = 1;
     public static final int ADD_NOTE = 2;
 
-    public MainPresenter(MainModel mainModel, IMainView view) {
+    public MainPresenter(MainModel mainModel, IMainView view, UserInfoProvider userInfoProvider) {
         this.mainModel = mainModel;
         this.view = view;
+        this.userInfoProvider = userInfoProvider;
     }
 
     public void reload(boolean load) {
@@ -64,5 +68,23 @@ public class MainPresenter {
     public void closeResources() {
         mainModel.closeResources();
         view = null;
+    }
+
+    public void logout() {
+        mainModel.logout(this::logoutSuccess, this::logoutError);
+    }
+
+    private void logoutSuccess() {
+        userInfoProvider.setLogin(null);
+        view.changeLoginMenuItems();
+    }
+
+    private void logoutError(Throwable throwable) {
+        Log.e("My error!!!", throwable.getMessage(), throwable);
+        view.makeToast("Ошибка. " + throwable.getMessage());
+    }
+
+    public boolean isLoggedIn() {
+        return !TextUtils.isEmpty(userInfoProvider.getLogin());
     }
 }

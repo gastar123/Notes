@@ -58,10 +58,15 @@ public class NetworkUtils {
                 .subscribe(action::run, throwableConsumer::accept);
     }
 
-    public void sendUserToServer(String userName, String password, Consumer<String> consumer, Consumer<Throwable> throwableConsumer) {
+    public void sendUserToServer(String userName, String password, Action action, Consumer<Throwable> throwableConsumer) {
         serverApi.postUserToServer(userName, password)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(consumer::accept, throwableConsumer::accept);
+                .subscribe(action, throwableConsumer);
+    }
 
+    public void logout(Action action, Consumer<Throwable> throwableConsumer) {
+        serverApi.logout()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(action, throwableConsumer);
     }
 }

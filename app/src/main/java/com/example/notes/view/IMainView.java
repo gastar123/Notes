@@ -17,4 +17,6 @@ public interface IMainView {
     void makeToast(String s);
 
     void closeRefreshing();
+
+    void changeLoginMenuItems();
 }

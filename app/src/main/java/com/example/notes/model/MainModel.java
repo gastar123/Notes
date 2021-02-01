@@ -53,8 +53,12 @@ public class MainModel {
         realm.commitTransaction();
     }
 
-    public void sendUserToServer(String userName, String password, Consumer<String> consumer, Consumer<Throwable> throwable) {
-        networkUtils.sendUserToServer(userName, password, consumer, throwable);
+    public void sendUserToServer(String userName, String password, Action action, Consumer<Throwable> throwable) {
+        networkUtils.sendUserToServer(userName, password, action, throwable);
+    }
+
+    public void logout(Action action, Consumer<Throwable> throwable) {
+        networkUtils.logout(action, throwable);
     }
 
     public Collection<Long> getServerIdsListForDelete() {
